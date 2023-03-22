@@ -21,6 +21,8 @@
 #library(keras)
 #K <- keras::backend()
 
+#Import libraries
+
 #library(keras)
 library(tidyverse)
 #library(imager)
@@ -32,12 +34,8 @@ library(OpenImageR)
 
 #IMAGE AUGMENTATION
 
+files_train <- list.files("Dataset/Train/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
-#train_dir <-  file.path("Train/Images")
-#test_dir <-  file.path("Test/Images")
-
-files_train <- list.files("Train/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
-#files_test <- list.files("Test/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 # Resize images
 
@@ -74,14 +72,14 @@ for(i in seq_along(files_train)){
       verbose = FALSE
     ) 
   Rotation_train[[i]] <- Rotated
-  writeImage(Rotated, paste0("Train/Rotated_Images/", i, ".jpg"))
-  while (!is.null(dev.list()))  dev.off()
+  #writeImage(Rotated, paste0("Train/Rotated_Images/", i, ".jpg"))    #Save image in folder
+  #while (!is.null(dev.list()))  dev.off()
 }
 
 
 imageShow(Rotation_train[[70]])
 
-#Horizontal flip (Mirror)
+# Horizontal flip (Mirror)
 
 flip_train <- list()
 for(i in seq_along(files_train)){
@@ -105,13 +103,13 @@ for(i in seq_along(files_train)){
       verbose = FALSE
     ) 
   flip_train[[i]] <- flip
-  #writeImage(flip, paste0("Train/flip_Images/", i, ".jpg"))
+  #writeImage(flip, paste0("Train/flip_Images/", i, ".jpg"))    #Save image in folder
   #while (!is.null(dev.list()))  dev.off()
 }
 
 imageShow(flip_train[[10]])
 
-#Width shifted (Shift columns)
+# Width shifted (Shift columns)
 
 w_shift_train <- list()
 for(i in seq_along(files_train)){
@@ -135,13 +133,13 @@ for(i in seq_along(files_train)){
       verbose = FALSE
     ) 
   w_shift_train[[i]] <- wshift
-  #writeImage(wshift, paste0("Train/wshift_Images/", i, ".jpg"))
+  #writeImage(wshift, paste0("Train/wshift_Images/", i, ".jpg"))    #Save image in folder
   #while (!is.null(dev.list()))  dev.off()
 }
 
 imageShow(w_shift_train[[10]])
 
-#height shifted (Shift rows)
+#height shift (Shift rows)
 
 h_shift_train <- list()
 for(i in seq_along(files_train)){
@@ -165,7 +163,7 @@ for(i in seq_along(files_train)){
       verbose = FALSE
     ) 
   h_shift_train[[i]] <- hshift
-  #writeImage(hshift, paste0("Train/hshift_Images/", i, ".jpg"))
+  #writeImage(hshift, paste0("Train/hshift_Images/", i, ".jpg"))      #Save image in folder
   #while (!is.null(dev.list()))  dev.off()
 }
 
@@ -179,7 +177,7 @@ for(i in seq_along(files_train)){
   white <- resizeImage(Image, width = 240, height = 320) %>% 
     ZCAwhiten(30, 0.1) 
   white_train[[i]] <- white
-  #writeImage(white, paste0("Train/hshift_Images/", i, ".jpg"))
+  #writeImage(white, paste0("Train/hshift_Images/", i, ".jpg"))     #Save image in folder
   #while (!is.null(dev.list()))  dev.off()
 }
 
@@ -191,9 +189,9 @@ edgedet_train <- list()
 for(i in seq_along(files_train)){
   Image <- readImage(files_train[i]) 
   edge <- resizeImage(Image, width = 240, height = 320) %>% 
-    edge_detection(method = 'Prewitt', conv_mode = 'same') #Methods: 'Frei_chen', 'LoG', 'Prewitt', 'Roberts_cross', 'Scharr', 'Sobel'
+    edge_detection(method = 'Prewitt', conv_mode = 'same')  #Methods: 'Frei_chen', 'LoG', 'Prewitt', 'Roberts_cross', 'Scharr', 'Sobel'
   edgedet_train[[i]] <- edge
-  #writeImage(edge, paste0("Train/edge_Images/", i, ".jpg"))
+  #writeImage(edge, paste0("Train/edge_Images/", i, ".jpg"))   #Save image in folder
   #while (!is.null(dev.list()))  dev.off()
 }
 
