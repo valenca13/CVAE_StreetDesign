@@ -16,6 +16,8 @@ library(OpenImageR)
 
 ##### 2. Import training images
 
+Import dataset of filtered images from training. 
+
 ```{r}
 files_train <- list.files("Dataset/Train/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 ```
