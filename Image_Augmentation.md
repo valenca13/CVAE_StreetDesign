@@ -10,8 +10,10 @@ library(OpenImageR)
 
 ##### 2. Import training images
 
+Import dataset of filtered images from training.
+
 ``` r
-files_train <- list.files("Dataset/Train/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_train <- list.files("Example_Image",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 ```
 
 -   Show an example of an image from the original dataset:
@@ -23,7 +25,7 @@ for(i in seq_along(files_train)){
   Results_train[[i]] <- Image
 }
 
-imageShow(Results_train[[10]])
+imageShow(Results_train[[1]])
 ```
 
 ![](Image_Augmentation_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
@@ -37,7 +39,7 @@ for(i in seq_along(files_train)){
   Resized <- resizeImage(Image, width = 240, height = 320) #uniform size of images
   Resize_train[[i]] <- Resized
 }
-imageShow(Resize_train[[10]])
+imageShow(Resize_train[[1]])
 ```
 
 ![](Image_Augmentation_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
@@ -71,7 +73,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(Rotation_train[[10]])
+imageShow(Rotation_train[[1]])
 ```
 
 ![](Image_Augmentation_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
@@ -105,7 +107,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(flip_train[[10]])
+imageShow(flip_train[[1]])
 ```
 
 ![](Image_Augmentation_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
@@ -139,7 +141,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(w_shift_train[[10]])
+imageShow(w_shift_train[[1]])
 ```
 
 ![](Image_Augmentation_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
@@ -173,7 +175,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(h_shift_train[[10]])
+imageShow(h_shift_train[[1]])
 ```
 
 ![](Image_Augmentation_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
@@ -191,7 +193,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(white_train[[10]])
+imageShow(white_train[[1]])
 ```
 
 ![](Image_Augmentation_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
@@ -209,7 +211,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(edgedet_train[[10]])
+imageShow(edgedet_train[[1]])
 ```
 
 ![](Image_Augmentation_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->

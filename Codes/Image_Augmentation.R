@@ -1,40 +1,11 @@
-# Computer Vision Concepts
+# IMAGE AUGMENTATION
 
-# - An image is the combination of red, green and blue channels; 
-# - The computer reads the images as numbers (scalars, vectors, arrays or matrices);
-# - The channels are converted to three dimensional arrays (row, column, channel);
-# - Each cell of the array corresponds to a pixel. Therefore, the arrays dimensions are equal to the resolution;
-# - The values stored in each cell of the array represent the intensity of that channel for the corresponding pixel;
-# - Therefore, each pixel has three channels. 
-# - The maximum value of the "intensity of brightness" in each channel is 255. 
-# These values are on a scale of 0 (no light) to 255 (the brightest). 
-# Thus, if a pixel is perfectly black, its values would be {Red: 0, Green: 0, Blue: 0}. 
-# Conversely, if the pixel is white, their stored values on the arrays would be {R: 255, G: 255, B: 255}
-# That is why we divide by 255, for the values to be between 0-1.
-
-
-
-# With TF-2, you can still run this code due to the following line:
-#if (tensorflow::tf$executing_eagerly())
-  #tensorflow::tf$compat$v1$disable_eager_execution()
-
-#library(keras)
-#K <- keras::backend()
-
-#Import libraries
-
-#library(keras)
+# Import libraries
 library(tidyverse)
-#library(imager)
-#library(recolorize)
 library(OpenImageR)
-#library(readxl)
-#library(listarrays)
 
-
-#IMAGE AUGMENTATION
-
-files_train <- list.files("Dataset/Train/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+#Import images
+files_train <- list.files("Example_Image",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 
 # Resize images

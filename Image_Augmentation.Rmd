@@ -19,7 +19,7 @@ library(OpenImageR)
 Import dataset of filtered images from training. 
 
 ```{r}
-files_train <- list.files("Dataset/Train/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_train <- list.files("Example_Image",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 ```
 
 * Show an example of an image from the original dataset: 
@@ -31,7 +31,7 @@ for(i in seq_along(files_train)){
   Results_train[[i]] <- Image
 }
 
-imageShow(Results_train[[10]])
+imageShow(Results_train[[1]])
 ```
 
 
@@ -44,7 +44,7 @@ for(i in seq_along(files_train)){
   Resized <- resizeImage(Image, width = 240, height = 320) #uniform size of images
   Resize_train[[i]] <- Resized
 }
-imageShow(Resize_train[[10]])
+imageShow(Resize_train[[1]])
 ```
 
 ##### 4. Image rotation
@@ -76,7 +76,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(Rotation_train[[10]])
+imageShow(Rotation_train[[1]])
 ```
 
 ##### 5. Horizontal flip (Mirror)
@@ -108,7 +108,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(flip_train[[10]])
+imageShow(flip_train[[1]])
 ```
 
 ##### 6. Width shifted (Shift columns)
@@ -140,7 +140,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(w_shift_train[[10]])
+imageShow(w_shift_train[[1]])
 ```
 
 ##### 7. Height shift (Shift rows)
@@ -172,7 +172,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(h_shift_train[[10]])
+imageShow(h_shift_train[[1]])
 ```
 
 ##### 8. ZCA Whitening
@@ -188,7 +188,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(white_train[[10]])
+imageShow(white_train[[1]])
 ```
 
 ##### 9. Edge Detection
@@ -204,7 +204,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(edgedet_train[[10]])
+imageShow(edgedet_train[[1]])
 
 ```
 

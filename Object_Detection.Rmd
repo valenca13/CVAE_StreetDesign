@@ -1,0 +1,76 @@
+---
+title: "Object Detection"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##### 1. Import libraries
+
+```{r}
+#remotes::install_github("maju116/platypus")
+
+# With TF-2, you can still run this code due to the following line:
+if (tensorflow::tf$executing_eagerly())
+  tensorflow::tf$compat$v1$disable_eager_execution()
+
+library(keras)
+K <- keras::backend()
+library(tidyverse)
+library(platypus)
+library(abind)
+#purrr::set_names 
+```
+
+##### 2. "You Look Only Once" (YOLO)
+
+```{r}
+test_yolo <- yolo3(
+  net_h = 416, # Input image height. Must be divisible by 32
+  net_w = 416, # Input image width. Must be divisible by 32
+  grayscale = FALSE, # Images can be loaded as grayscale or RGB
+  n_class = 80, # Number of object classes (80 for COCO dataset)
+  anchors = coco_anchors)   # Anchor boxes
+
+
+test_yolo
+```
+
+##### 3. You can now load YOLOv3 Darknet weights trained on COCO dataset. Download pre-trained weights from here and run:
+
+```{r}
+test_yolo %>% load_darknet_weights("yolov3.weights")
+```
+
+##### 4. Calculate predictions for new images
+
+```{r}
+train_img_paths <- data.frame(list.files("Example_Image",  full.names = TRUE, pattern = ".jpg", all.files = TRUE))
+
+train_imgs <- train_img_paths %>%
+  map(~ {
+    image_load(., target_size = c(416, 416), grayscale = FALSE) %>%
+      image_to_array() %>%
+      `/`(255)
+  }) %>%
+  abind(along=4) %>% #along = 4
+  aperm(c(4, 1:3))
+
+train_preds <- test_yolo %>% 
+  predict(train_imgs) 
+```
+
+>Note: The first element of the train_pred is the number of images  
+
+ *  The Yolo network has 3 outputs: 
+    - For large objects: (1:13, 1:13, 1:3);  
+    
+    - For medium objects: (1:26, 1:26, 1:3);  
+    
+    - For small objects: (1:52, 1:52, 1:52);  
+    
+ * The output objects are vectors of length 85. 
+
+##### 5. 
