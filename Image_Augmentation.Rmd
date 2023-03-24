@@ -19,7 +19,7 @@ library(OpenImageR)
 Import dataset of filtered images from training. 
 
 ```{r}
-files_train <- list.files("Example_Image",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_train <- list.files("Example_Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 ```
 
 * Show an example of an image from the original dataset: 
