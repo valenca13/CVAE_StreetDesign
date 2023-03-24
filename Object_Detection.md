@@ -177,7 +177,7 @@ head(labels)
     ## 10 0.150  0.659 0.210  0.697 0.627        3 car   
     ## 11 0.256  0.655 0.313  0.701 0.981        3 car
 
--   Each row correspond to an object detected in the image (bounding
+-   Each row corresponds to an object detected in the image (bounding
     box).
 
 ##### 7. Convert the labels into different formats for testing in the Conditional Variational Autoencoder
@@ -201,9 +201,11 @@ table_yolo = data.frame(labels[i]) %>%
          y_centre = mean(c(ymin, ymax)),
          width = xmax - xmin,
          height = ymax - ymin) %>% 
-  select(class_id, x_centre, y_centre, width, height) #%>% 
-  #write.table(file = paste0("Train/Labels/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)   #Save labels in folder
-}}
+  select(class_id, x_centre, y_centre, width, height) %>% 
+  write.table(file = paste0("Train/Labels/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)   #Save labels in folder
+  }}
+
+#Exportlabels_txt()
 ```
 
 -   In YOLO format, every image in the dataset has a single \*.txt file.
@@ -212,6 +214,60 @@ table_yolo = data.frame(labels[i]) %>%
 
 ###### b) Export labels with a single vector presenting the classes
 
+``` r
+Exportlabels_Class_txt = function(){
+  for(i in 1:length(labels)) {
+    table_yolo = data.frame(labels[i]) %>%
+      mutate(class_id = label_id) %>% 
+      select(class_id) %>% 
+      write.table(file = paste0("Train/Labels_Class/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE) #Save labels in folder
+  }}
+
+#Exportlabels_Class_txt()
+```
+
 > **Note**: In the Coco dataset that the YOLOv3 was trained, the classes
 > *Car*; *bus*; *truck*; *person*; *bicycle*; correspond to the
 > following id: \[3, 6, 8, 1, 2\].
+
+###### c) Export labels as a vector with dummy variable analyzing if the class is present or not in the image (dummy variable)
+
+``` r
+labels_df <- data.frame(labels) 
+
+mode <- data.frame("car", "bus", "truck", "person")
+
+
+for(i in 1:length(labels)) {
+    mode[i,1] = ifelse(any(labels_df[[1]][[i]]$label_id == 3), 1, 0);
+    mode[i,2] = ifelse(any(labels_df[[1]][[i]]$label_id == 6), 1, 0); 
+    mode[i,3] = ifelse(any(labels_df[[1]][[i]]$label_id == 8), 1, 0); 
+    mode[i,4] = ifelse(any(labels_df[[1]][[i]]$label_id == 1), 1, 0) 
+    }
+```
+
+-   Export the labels in an Excel sheet to use as an input for the
+    Conditional Variational Autoencoder
+
+``` r
+library(writexl)
+#write_xlsx(mode, "Train/Labels_Dummy/Labels_Dummy.xlsx")
+```
+
+##### 8. Plot images with the objects detected
+
+``` r
+plot_boxes(
+  images_paths = train_img_paths, # Images paths
+  boxes = train_boxes, # Bounding boxes
+  correct_hw = TRUE, # Should height and width of bounding boxes be corrected to image height and width
+  labels = coco_labels, # Class labels
+)
+```
+
+    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
+    ## of ggplot2 3.3.4.
+    ## ℹ The deprecated feature was likely used in the platypus package.
+    ##   Please report the issue at <https://github.com/maju116/platypus/issues>.
+
+![](Object_Detection_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->![](Object_Detection_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->![](Object_Detection_files/figure-gfm/unnamed-chunk-14-3.png)<!-- -->
