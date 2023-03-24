@@ -1,11 +1,15 @@
 Object Detection
 ================
 
-##### 1. Import libraries
+##### 1. Install libraries
 
 ``` r
 #remotes::install_github("maju116/platypus")
+```
 
+##### 2. Import libraries
+
+``` r
 # With TF-2, you can still run this code due to the following line:
 if (tensorflow::tf$executing_eagerly())
   tensorflow::tf$compat$v1$disable_eager_execution()
@@ -13,38 +17,12 @@ if (tensorflow::tf$executing_eagerly())
 library(keras)
 K <- keras::backend()
 library(tidyverse)
-```
-
-    ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-    ## ✔ ggplot2 3.4.0      ✔ purrr   0.3.4 
-    ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-    ## ✔ tidyr   1.2.0      ✔ stringr 1.4.0 
-    ## ✔ readr   2.1.2      ✔ forcats 0.5.1
-
-    ## Warning: package 'ggplot2' was built under R version 4.2.2
-
-    ## Warning: package 'dplyr' was built under R version 4.2.2
-
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-
-``` r
 library(platypus)
-```
-
-    ## Loading required package: tensorflow
-
-    ## Warning: package 'tensorflow' was built under R version 4.2.2
-
-    ## Welceome to platypus!
-
-``` r
 library(abind)
 #purrr::set_names 
 ```
 
-##### 2. “You Look Only Once” (YOLO)
+##### 2. Import the “You Look Only Once” (YOLO) model for object detection
 
 ``` r
 test_yolo <- yolo3(
@@ -88,16 +66,34 @@ test_yolo
     ## Non-trainable params: 52,608
     ## ________________________________________________________________________________
 
-##### 3. You can now load YOLOv3 Darknet weights trained on COCO dataset. Download pre-trained weights from here and run:
+-   The first element of the train_pred is the number of images.
+
+-   The Yolo network has 3 outputs:
+
+    -   For large objects: (1:13, 1:13, 1:3);
+
+    -   For medium objects: (1:26, 1:26, 1:3);
+
+    -   For small objects: (1:52, 1:52, 1:52);
+
+-   The output objects are vectors of length 85.
+
+##### 3. [Download](https://pjreddie.com/darknet/yolo/) and import YOLOv3 Darknet weights trained on COCO dataset.
 
 ``` r
-test_yolo %>% load_darknet_weights("yolov3.weights")
+#test_yolo %>% load_darknet_weights("yolov3.weights")
 ```
+
+> **Note**: The *yolov3.weights* file is too large to be loaded to
+> github. Therefore, you should download and run the code with the
+> weights.
 
 ##### 4. Calculate predictions for new images
 
 ``` r
-train_img_paths <- data.frame(list.files("Example_Image",  full.names = TRUE, pattern = ".jpg", all.files = TRUE))
+train_img_paths <- list.files("Example_Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+
+#train_img_paths <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 train_imgs <- train_img_paths %>%
   map(~ {
@@ -112,14 +108,110 @@ train_preds <- test_yolo %>%
   predict(train_imgs) 
 ```
 
-> Note: The first element of the train_pred is the number of images
+> **Note**: The same code is used for training and test data. The
+> crucial point that needs to be changes is in importing the files. For
+> training data use *“Dataset/Train_filtered”* and for test data use
+> *“Dataset/Test_filtered”*. Also we recommend adapting the name of
+> variables according to the type of dataset.
 
--   The Yolo network has 3 outputs:
-    -   For large objects: (1:13, 1:13, 1:3);
+##### 5. Transform raw predictions into bounding boxes:
 
-    -   For medium objects: (1:26, 1:26, 1:3);
+``` r
+train_boxes <- get_boxes(
+  preds = train_preds, # Raw predictions form YOLOv3 model
+  anchors = coco_anchors, # Anchor boxes
+  labels = coco_labels, # Class labels
+  obj_threshold = 0.55, # Object threshold
+  nms = TRUE, # Should non-max suppression be applied (ensures that objects are only detected once)
+  nms_threshold = 0.6, # Non-max suppression threshold
+  correct_hw = FALSE # Should height and width of bounding boxes be corrected to image height and width
+)
+```
 
-    -   For small objects: (1:52, 1:52, 1:52);
--   The output objects are vectors of length 85.
+##### 6. Define the labels
 
-##### 5.
+``` r
+labels <- array(train_boxes)
+
+head(labels)
+```
+
+    ## [[1]]
+    ## # A tibble: 6 × 7
+    ##    xmin  ymin  xmax  ymax p_obj label_id label        
+    ##   <dbl> <dbl> <dbl> <dbl> <dbl>    <int> <chr>        
+    ## 1 0.197 0.667 0.211 0.695 0.705        1 person       
+    ## 2 0.215 0.666 0.227 0.696 0.754        1 person       
+    ## 3 0.231 0.664 0.244 0.698 0.673        1 person       
+    ## 4 0.372 0.631 0.566 0.821 0.987        3 car          
+    ## 5 0.257 0.626 0.366 0.751 0.997        8 truck        
+    ## 6 0.419 0.542 0.425 0.558 0.759       10 traffic light
+    ## 
+    ## [[2]]
+    ## # A tibble: 9 × 7
+    ##      xmin  ymin  xmax  ymax p_obj label_id label
+    ##     <dbl> <dbl> <dbl> <dbl> <dbl>    <int> <chr>
+    ## 1 0.101   0.587 0.275 0.824 0.996        3 car  
+    ## 2 0.591   0.606 0.914 0.911 1.00         3 car  
+    ## 3 0.485   0.620 0.563 0.699 0.835        3 car  
+    ## 4 0.535   0.617 0.640 0.714 0.891        3 car  
+    ## 5 0.00278 0.559 0.158 0.922 0.999        3 car  
+    ## 6 0.378   0.596 0.450 0.667 0.991        3 car  
+    ## 7 0.427   0.601 0.511 0.680 0.837        3 car  
+    ## 8 0.452   0.611 0.527 0.680 0.599        3 car  
+    ## 9 0.466   0.611 0.556 0.687 0.804        3 car  
+    ## 
+    ## [[3]]
+    ## # A tibble: 11 × 7
+    ##      xmin  ymin   xmax  ymax p_obj label_id label 
+    ##     <dbl> <dbl>  <dbl> <dbl> <dbl>    <int> <chr> 
+    ##  1 0.858  0.624 0.925  0.777 0.969        1 person
+    ##  2 0.758  0.606 0.835  0.834 0.920        1 person
+    ##  3 0.497  0.648 0.668  0.782 1.00         3 car   
+    ##  4 0.191  0.648 0.254  0.691 0.835        3 car   
+    ##  5 0.327  0.659 0.353  0.683 0.924        3 car   
+    ##  6 0.359  0.658 0.382  0.681 0.872        3 car   
+    ##  7 0.0119 0.652 0.0823 0.707 0.958        3 car   
+    ##  8 0.0546 0.655 0.116  0.703 0.832        3 car   
+    ##  9 0.106  0.657 0.152  0.700 0.581        3 car   
+    ## 10 0.150  0.659 0.210  0.697 0.627        3 car   
+    ## 11 0.256  0.655 0.313  0.701 0.981        3 car
+
+-   Each row correspond to an object detected in the image (bounding
+    box).
+
+##### 7. Convert the labels into different formats for testing in the Conditional Variational Autoencoder
+
+-   Extract the names of the images to match with the labels
+
+``` r
+images_names = gsub(pattern = "\\.jpg$", "", basename(train_img_paths))
+```
+
+> Note: In the paper we tested only the format *“c”*.
+
+###### a) Tranform the labels in Yolo format and save in the Labels folder with the same name as the respective image.
+
+``` r
+Exportlabels_txt = function(){
+  for(i in 1:length(labels)) {
+table_yolo = data.frame(labels[i]) %>%
+  mutate(class_id = label_id,
+         x_centre = mean(c(xmin, xmax)), 
+         y_centre = mean(c(ymin, ymax)),
+         width = xmax - xmin,
+         height = ymax - ymin) %>% 
+  select(class_id, x_centre, y_centre, width, height) #%>% 
+  #write.table(file = paste0("Train/Labels/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)   #Save labels in folder
+}}
+```
+
+-   In YOLO format, every image in the dataset has a single \*.txt file.
+
+-   YOLO format = \[class_id, x_centre, y_centre, width, height\].
+
+###### b) Export labels with a single vector presenting the classes
+
+> **Note**: In the Coco dataset that the YOLOv3 was trained, the classes
+> *Car*; *bus*; *truck*; *person*; *bicycle*; correspond to the
+> following id: \[3, 6, 8, 1, 2\].
