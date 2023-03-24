@@ -5,7 +5,8 @@ library(tidyverse)
 library(OpenImageR)
 
 #Import images
-files_train <- list.files("Example_Image",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+
+files_train <- list.files("Example_Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 
 # Resize images
@@ -48,7 +49,7 @@ for(i in seq_along(files_train)){
 }
 
 
-imageShow(Rotation_train[[70]])
+imageShow(Rotation_train[[1]])
 
 # Horizontal flip (Mirror)
 
@@ -78,7 +79,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(flip_train[[10]])
+imageShow(flip_train[[1]])
 
 # Width shifted (Shift columns)
 
@@ -108,7 +109,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(w_shift_train[[10]])
+imageShow(w_shift_train[[1]])
 
 #height shift (Shift rows)
 
@@ -138,7 +139,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(h_shift_train[[10]])
+imageShow(h_shift_train[[1]])
 
 # ZCA Whitening
 
@@ -152,7 +153,7 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(white_train[[10]])
+imageShow(white_train[[1]])
 
 # Edge detection
 
@@ -166,4 +167,4 @@ for(i in seq_along(files_train)){
   #while (!is.null(dev.list()))  dev.off()
 }
 
-imageShow(edgedet_train[[20]])
+imageShow(edgedet_train[[1]])
