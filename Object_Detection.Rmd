@@ -7,11 +7,15 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-##### 1. Import libraries
+##### 1. Install libraries
 
-```{r}
+```{r message=FALSE, warning=FALSE}
+
 #remotes::install_github("maju116/platypus")
+```
 
+##### 2. Import libraries
+```{r}
 # With TF-2, you can still run this code due to the following line:
 if (tensorflow::tf$executing_eagerly())
   tensorflow::tf$compat$v1$disable_eager_execution()
@@ -24,7 +28,7 @@ library(abind)
 #purrr::set_names 
 ```
 
-##### 2. "You Look Only Once" (YOLO)
+##### 2. Import the "You Look Only Once" (YOLO) model for object detection
 
 ```{r}
 test_yolo <- yolo3(
@@ -38,16 +42,23 @@ test_yolo <- yolo3(
 test_yolo
 ```
 
-##### 3. You can now load YOLOv3 Darknet weights trained on COCO dataset. Download pre-trained weights from here and run:
+##### 3. [Download](https://pjreddie.com/darknet/yolo/) and import YOLOv3 Darknet weights trained on COCO dataset. 
+
+```{r include=FALSE}
+test_yolo %>% load_darknet_weights("C:/Users/gabri/Downloads/yolov3.weights")
+```
+
 
 ```{r}
-test_yolo %>% load_darknet_weights("yolov3.weights")
+#test_yolo %>% load_darknet_weights("yolov3.weights")
 ```
+
+>Note: The _yolov3.weights_ file is too large to be loaded to github. Therefore, you should download and run the code with the weights. 
 
 ##### 4. Calculate predictions for new images
 
 ```{r}
-train_img_paths <- data.frame(list.files("Example_Image",  full.names = TRUE, pattern = ".jpg", all.files = TRUE))
+train_img_paths <- data.frame(list.files("Example_Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE))
 
 train_imgs <- train_img_paths %>%
   map(~ {
