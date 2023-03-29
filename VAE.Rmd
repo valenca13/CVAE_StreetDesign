@@ -1,44 +1,70 @@
-# VARIATIONAL AUTOENCODER
-#Import Libraries
-# With TF-2, you can still run this code due to the following line:
+---
+title: "Variational Autoencoder"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+##### 1. Import Libraries
+With TF-2, you can still run this code due to the following line:
+```{r}
 if (tensorflow::tf$executing_eagerly())
   tensorflow::tf$compat$v1$disable_eager_execution()
 
 library(keras)
 K <- keras::backend()
 
-#library(keras)
 library(tidyverse)
 library(imager)
 library(recolorize)
 library(OpenImageR)
 library(readxl)
+```
 
+##### 2. Import datasets
 
+```{r}
 files_train <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 files_test <- list.files("Dataset/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+```
 
-## Note: The labels are already in format of dummy variables (One-hot encoding). No need to use "to_categorical" function. 
+##### Resize images and assign to a list. 
 
-# Training data
+**a) Training data**
+
+```{r}
 Results_train <- list()
 for(i in seq_along(files_train)){
   Image <- readImage(files_train[i]) 
   Resized <- resizeImage(Image, width = 240, height = 320) #uniform size of images
   Results_train[[i]] <- Resized
 }
+```
 
-#Check the number of dimensions
+
+###### Check the number of dimensions
+
+```{r}
 dim(Results_train[[2]])
+```
+
+
 # 240(height-row) x 320(width-column) x 3(channels - RGB) 
 
 
-#Show an example of an image
+###### Show an example of an image in training dataset
+
+```{r}
 imageShow(Results_train[[8]])
+```
 
-# Convert list of images into arrays
+###### Convert list of images into arrays
 
+```{r}
 img_rows <- 240L
 img_cols <- 320L
 img_channels <- 3L
@@ -47,6 +73,9 @@ n_images_train <- length(Results_train)
 
 train_array <- array(unlist(Results_train), dim=c(n_images_train,img_rows, img_cols, img_channels)) 
 dim(train_array)
+```
+
+
 
 # Test data
 Results_test <- list()
@@ -277,3 +306,4 @@ summary(vae)
 imageShow(Results_train[[1]])
 imageShow(x_train[1,,,])
 #-----------------------------------------------------------------------------
+
