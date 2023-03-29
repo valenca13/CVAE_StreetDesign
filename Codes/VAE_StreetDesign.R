@@ -1,18 +1,4 @@
-# Computer Vision Concepts
-
-# - An image is the combination of red, green and blue channels; 
-# - The computer reads the images as numbers (scalars, vectors, arrays or matrices);
-# - The channels are converted to three dimensional arrays (row, column, channel);
-# - Each cell of the array corresponds to a pixel. Therefore, the arrays dimensions are equal to the resolution;
-# - The values stored in each cell of the array represent the intensity of that channel for the corresponding pixel;
-# - Therefore, each pixel has three channels. 
-# - The maximum value of the "intensity of brightness" in each channel is 255. 
-# These values are on a scale of 0 (no light) to 255 (the brightest). 
-# Thus, if a pixel is perfectly black, its values would be {Red: 0, Green: 0, Blue: 0}. 
-# Conversely, if the pixel is white, their stored values on the arrays would be {R: 255, G: 255, B: 255}
-# That is why we divide by 255, for the values to be between 0-1.
-
-
+# VARIATIONAL AUTOENCODER
 #Import Libraries
 # With TF-2, you can still run this code due to the following line:
 if (tensorflow::tf$executing_eagerly())
@@ -29,9 +15,9 @@ library(OpenImageR)
 library(readxl)
 
 
-files_train <- list.files("Dataset/Train/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_train <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
-files_test <- list.files("Dataset/Test/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_test <- list.files("Dataset/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 ## Note: The labels are already in format of dummy variables (One-hot encoding). No need to use "to_categorical" function. 
 
