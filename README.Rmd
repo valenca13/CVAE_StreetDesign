@@ -7,24 +7,17 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## GitHub Documents
+### Guidelines
 
-This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+##### Preprocessing 
 
-## Including Code
+[1. Image Augmentation](Image_Augmentation.md)
 
-You can include R code in the document as follows:
+[2. Object Detection](Object_Detection.md)
 
-```{r cars}
-summary(cars)
-```
+##### Generative Deep Modelling
 
-## Including Plots
+3. Variational Autoencoder
 
-You can also embed plots, for example:
+4. Conditional Variational Autoencoder
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
