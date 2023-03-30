@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ##### Generative Deep Modelling
 
-3. Variational Autoencoder
+[3. Variational Autoencoder](VAE.md)
 
 4. Conditional Variational Autoencoder
 
