@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ##### 1. Import Libraries
 With TF-2, you can still run this code due to the following line:
-```{r}
+```{r message=FALSE, warning=FALSE}
 if (tensorflow::tf$executing_eagerly())
   tensorflow::tf$compat$v1$disable_eager_execution()
 
@@ -22,11 +22,12 @@ library(imager)
 library(recolorize)
 library(OpenImageR)
 library(readxl)
+library(listarrays)
 ```
 
-##### 2. Import datasets
+##### 2. Import and treat datasets
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 files_train <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 files_test <- list.files("Dataset/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
@@ -36,7 +37,7 @@ files_test <- list.files("Dataset/Test_filtered",  full.names = TRUE, pattern = 
 
 **a) Training data**
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 Results_train <- list()
 for(i in seq_along(files_train)){
   Image <- readImage(files_train[i]) 
@@ -46,25 +47,24 @@ for(i in seq_along(files_train)){
 ```
 
 
-###### Check the number of dimensions
+###### Check dimensionality
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 dim(Results_train[[2]])
 ```
 
 
-# 240(height-row) x 320(width-column) x 3(channels - RGB) 
-
+>**Note**: 240(height-row) x 320(width-column) x 3(channels - RGB) 
 
 ###### Show an example of an image in training dataset
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 imageShow(Results_train[[8]])
 ```
 
 ###### Convert list of images into arrays
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 img_rows <- 240L
 img_cols <- 320L
 img_channels <- 3L
@@ -76,47 +76,63 @@ dim(train_array)
 ```
 
 
+**b) Test data**
 
-# Test data
+```{r}
 Results_test <- list()
 for(i in seq_along(files_test)){
   Image <- readImage(files_test[i])
   Resized <- resizeImage(Image, width = 240, height = 320)
   Results_test[[i]] <- Resized
 }
+```
 
-#Check the number of dimensions
+
+###### Check dimensionality
+
+```{r}
 dim(Results_test[[2]])
+```
 
-#show images
+###### Show an example of an image in training dataset
+
+```{r}
 imageShow(Results_test[[3]])
+```
 
-# Convert list of images into arrays
+###### Convert list of images into arrays
 
+```{r}
 n_images_test <- length(Results_test)
 test_array <- array(unlist(Results_test), dim=c(n_images_test,img_rows, img_cols, img_channels)) 
+```
 
-# Data preparation --------------------------------------------------------
 
-library(listarrays)
+##### 3. Data preparation 
 
+```{r}
 x_train <- train_array %>% 
   `/` (255) %>% 
   as.array()
 
-# Note: keras.Conv2D layers expect input with 4D shape
-
-dim(x_train)
-
 x_test <- test_array %>% 
   `/` (255) %>% 
   as.array()
+```
 
-# VARIATIONAL AUTOENCODER
+>**Note**: keras.Conv2D layers expect input with 4D shape
 
-# Parameters --------------------------------------------------------------
+###### Check dimensionality
 
-  ## Traning parameters
+```{r}
+dim(x_train)
+```
+
+##### 4. VARIATIONAL AUTOENCODER
+
+**a) Training parameters** 
+
+```{r}
 batch_size <- 100L   # number of training samples used in one iteration
 #Note: Popular batch sizes include 32, 64, and 128 samples.
 
@@ -124,20 +140,23 @@ epochs <- 30L  # number of times that the learning algorithm will work through t
 
 original_dim <- c(img_rows, img_cols, img_channels)
 
-  ## Number of convolutional filters to use
 filters <- 1L #Detects the patterns on the data.
 
-  # Convolution kernel size
+# Convolution kernel size
 num_conv <- 3L
 latent_dim <- 2L
 intermediate_dim <- 128L
 epsilon_std <- 1.0
+```
+
+>**Note**: The values of the parameter were modified during the experiment. These are just an example. Please check Table 1 of the paper. 
 
 
-#Model definition --------------------------------------------------------
+**b) Model definition**
 
-# ENCODER
+###### Encoder
 
+```{r}
 x <- layer_input(shape = original_dim, name = 'encoder_input')
 
 conv_1 <- layer_conv_2d(
@@ -175,26 +194,26 @@ conv_4 <- layer_conv_2d(
   padding = "same",
   activation = "relu"
 )
+```
 
 
+###### flattern the layer
 
-#flattern the layer
+```{r}
 flat <- layer_flatten(conv_4)
+```
 
+###### Dense layer and latent space
+
+```{r}
 h <- layer_dense(flat, intermediate_dim, activation = "relu") #hidden layer
 z_mean <- layer_dense(h, latent_dim, name = 'latent_mu')
 z_log_var <- layer_dense(h, latent_dim, name = 'latent_sigma')
+```
 
+###### Reparameterization trick
 
-# Reparameterization trick
-
-#We define a sampling function to sample from the distribution.
-# z = z_mean + sigma*epsilon
-#where, sigma = exp(log_var/2)
-#z_mean (mu) is a vector that represents the the mean point of the distribution.
-#log_var is a vector that represents the logarithm of the variance of each dimension.
-#epsilon is a point sampled from the standard normal distribution
-
+```{r}
 sampling <- function(arg){
   z_mean <- arg[, 1:(latent_dim)]
   z_log_var <- arg[, (latent_dim + 1):(2 * latent_dim)]
@@ -207,8 +226,17 @@ sampling <- function(arg){
   
   z_mean + k_exp(z_log_var/2)*epsilon
 }
+```
 
-# Note: This trick allows us to train both mu and sigma in the training process.
+>**Note**: The reparameterization trick allows the model to train both mu and sigma of the latent space.
+
+>**Note**: We define a sampling function to sample from the distribution. 
+z = z_mean + sigma*epsilon;  
+where, sigma = exp(log_var/2)
+
+* z_mean (mu) is a vector that represents the the mean point of the distribution;
+* log_var is a vector that represents the logarithm of the variance of each dimension;
+* epsilon is a point sampled from the standard normal distribution. 
 
 # We define the z by creating a sample vector from the latent distribution
 z <- layer_concatenate(list(z_mean, z_log_var)) %>%   

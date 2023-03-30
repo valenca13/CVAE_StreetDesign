@@ -7,7 +7,6 @@ if (tensorflow::tf$executing_eagerly())
 library(keras)
 K <- keras::backend()
 
-#library(keras)
 library(tidyverse)
 library(imager)
 library(recolorize)
@@ -179,7 +178,7 @@ sampling <- function(arg){
   z_mean + k_exp(z_log_var/2)*epsilon
 }
 
-# Note: This trick allows us to train both mu and sigma in the training process.
+# Note: This trick allows us to train both mu and sigma of the latent space.
 
 # We define the z by creating a sample vector from the latent distribution
 z <- layer_concatenate(list(z_mean, z_log_var)) %>%   
