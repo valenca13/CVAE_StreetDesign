@@ -13,86 +13,14 @@ library(keras)
 K <- keras::backend()
 
 library(tidyverse)
-```
-
-    ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-    ## ✔ ggplot2 3.4.0      ✔ purrr   0.3.4 
-    ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-    ## ✔ tidyr   1.2.0      ✔ stringr 1.4.0 
-    ## ✔ readr   2.1.2      ✔ forcats 0.5.1
-
-    ## Warning: package 'ggplot2' was built under R version 4.2.2
-
-    ## Warning: package 'dplyr' was built under R version 4.2.2
-
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-
-``` r
 library(imager)
-```
-
-    ## Loading required package: magrittr
-    ## 
-    ## Attaching package: 'magrittr'
-    ## 
-    ## The following object is masked from 'package:purrr':
-    ## 
-    ##     set_names
-    ## 
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     extract
-    ## 
-    ## 
-    ## Attaching package: 'imager'
-    ## 
-    ## The following object is masked from 'package:magrittr':
-    ## 
-    ##     add
-    ## 
-    ## The following object is masked from 'package:stringr':
-    ## 
-    ##     boundary
-    ## 
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     fill
-    ## 
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     convolve, spectrum
-    ## 
-    ## The following object is masked from 'package:graphics':
-    ## 
-    ##     frame
-    ## 
-    ## The following object is masked from 'package:base':
-    ## 
-    ##     save.image
-
-``` r
 library(recolorize)
 library(OpenImageR)
-```
-
-    ## Warning: package 'OpenImageR' was built under R version 4.2.2
-
-    ## 
-    ## Attaching package: 'OpenImageR'
-    ## 
-    ## The following object is masked from 'package:recolorize':
-    ## 
-    ##     readImage
-
-``` r
 library(readxl)
+library(listarrays)
 ```
 
-    ## Warning: package 'readxl' was built under R version 4.2.2
-
-##### 2. Import datasets
+##### 2. Import and treat datasets
 
 ``` r
 files_train <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
@@ -113,127 +41,7 @@ for(i in seq_along(files_train)){
 }
 ```
 
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
-    ## becomes 239 therefore we have to adjust it to the input width parameter of
-    ## 240.000000 !
-
-###### Check the number of dimensions
+###### Check dimensionality
 
 ``` r
 dim(Results_train[[2]])
@@ -241,7 +49,7 @@ dim(Results_train[[2]])
 
     ## [1] 240 320   3
 
-# 240(height-row) x 320(width-column) x 3(channels - RGB)
+> **Note**: 240(height-row) x 320(width-column) x 3(channels - RGB)
 
 ###### Show an example of an image in training dataset
 
@@ -266,97 +74,186 @@ dim(train_array)
 
     ## [1] 1269  240  320    3
 
-# Test data
+**b) Test data**
 
-Results_test \<- list() for(i in seq_along(files_test)){ Image \<-
-readImage(files_test\[i\]) Resized \<- resizeImage(Image, width = 240,
-height = 320) Results_test\[\[i\]\] \<- Resized }
+``` r
+Results_test <- list()
+for(i in seq_along(files_test)){
+  Image <- readImage(files_test[i])
+  Resized <- resizeImage(Image, width = 240, height = 320)
+  Results_test[[i]] <- Resized
+}
+```
 
-\#Check the number of dimensions dim(Results_test\[\[2\]\])
+    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
+    ## becomes 239 therefore we have to adjust it to the input width parameter of
+    ## 240.000000 !
 
-\#show images imageShow(Results_test\[\[3\]\])
+    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
+    ## becomes 239 therefore we have to adjust it to the input width parameter of
+    ## 240.000000 !
 
-# Convert list of images into arrays
+    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
+    ## becomes 239 therefore we have to adjust it to the input width parameter of
+    ## 240.000000 !
 
-n_images_test \<- length(Results_test) test_array \<-
-array(unlist(Results_test), dim=c(n_images_test,img_rows, img_cols,
-img_channels))
+###### Check dimensionality
 
-# Data preparation ——————————————————–
+``` r
+dim(Results_test[[2]])
+```
 
-library(listarrays)
+    ## [1] 240 320   3
 
-x_train \<- train_array %\>% `/` (255) %\>% as.array()
+###### Show an example of an image in training dataset
 
-# Note: keras.Conv2D layers expect input with 4D shape
+``` r
+imageShow(Results_test[[3]])
+```
 
+![](VAE_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+###### Convert list of images into arrays
+
+``` r
+n_images_test <- length(Results_test)
+test_array <- array(unlist(Results_test), dim=c(n_images_test,img_rows, img_cols, img_channels)) 
+```
+
+##### 3. Data preparation
+
+``` r
+x_train <- train_array %>% 
+  `/` (255) %>% 
+  as.array()
+
+x_test <- test_array %>% 
+  `/` (255) %>% 
+  as.array()
+```
+
+> **Note**: keras.Conv2D layers expect input with 4D shape
+
+###### Check dimensionality
+
+``` r
 dim(x_train)
+```
 
-x_test \<- test_array %\>% `/` (255) %\>% as.array()
+    ## [1] 1269  240  320    3
 
-# VARIATIONAL AUTOENCODER
+##### 4. VARIATIONAL AUTOENCODER
 
-# Parameters ————————————————————–
+**a) Training parameters**
 
-\## Traning parameters batch_size \<- 100L \# number of training samples
-used in one iteration \#Note: Popular batch sizes include 32, 64, and
-128 samples.
+``` r
+batch_size <- 100L   # number of training samples used in one iteration
+#Note: Popular batch sizes include 32, 64, and 128 samples.
 
-epochs \<- 30L \# number of times that the learning algorithm will work
-through the entire training dataset
+epochs <- 30L  # number of times that the learning algorithm will work through the entire training dataset
 
-original_dim \<- c(img_rows, img_cols, img_channels)
+original_dim <- c(img_rows, img_cols, img_channels)
 
-\## Number of convolutional filters to use filters \<- 1L \#Detects the
-patterns on the data.
+filters <- 1L #Detects the patterns on the data.
 
-\# Convolution kernel size num_conv \<- 3L latent_dim \<- 2L
-intermediate_dim \<- 128L epsilon_std \<- 1.0
+# Convolution kernel size
+num_conv <- 3L
+latent_dim <- 2L
+intermediate_dim <- 128L
+epsilon_std <- 1.0
+```
 
-\#Model definition ——————————————————–
+> **Note**: The values of the parameter were modified during the
+> experiment. These are just an example. Please check Table 1 of the
+> paper.
 
-# ENCODER
+**b) Model definition**
 
-x \<- layer_input(shape = original_dim, name = ‘encoder_input’)
+###### Encoder
 
-conv_1 \<- layer_conv_2d( x, filters = img_channels, kernel_size = c(2L,
-2L), strides = c(1L, 1L), padding = “same”, activation = “relu” )
+``` r
+x <- layer_input(shape = original_dim, name = 'encoder_input')
 
-conv_2 \<- layer_conv_2d( conv_1, filters = filters, kernel_size = c(2L,
-2L), strides = c(2L, 2L), padding = “same”, activation = “relu” )
+conv_1 <- layer_conv_2d(
+  x,
+  filters = img_channels,
+  kernel_size = c(2L, 2L),
+  strides = c(1L, 1L),
+  padding = "same",
+  activation = "relu"
+)
 
-conv_3 \<- layer_conv_2d( conv_2, filters = filters, kernel_size =
-c(num_conv, num_conv), strides = c(1L, 1L), padding = “same”, activation
-= “relu” )
+conv_2 <- layer_conv_2d(
+  conv_1,
+  filters = filters,
+  kernel_size = c(2L, 2L),
+  strides = c(2L, 2L),
+  padding = "same",
+  activation = "relu"
+)
 
-conv_4 \<- layer_conv_2d( conv_3, filters = filters, kernel_size =
-c(num_conv, num_conv), strides = c(1L, 1L), padding = “same”, activation
-= “relu” )
+conv_3 <- layer_conv_2d(
+  conv_2,
+  filters = filters,
+  kernel_size = c(num_conv, num_conv),
+  strides = c(1L, 1L),
+  padding = "same",
+  activation = "relu"
+)
 
-\#flattern the layer flat \<- layer_flatten(conv_4)
+conv_4 <- layer_conv_2d(
+  conv_3,
+  filters = filters,
+  kernel_size = c(num_conv, num_conv),
+  strides = c(1L, 1L),
+  padding = "same",
+  activation = "relu"
+)
+```
 
-h \<- layer_dense(flat, intermediate_dim, activation = “relu”) \#hidden
-layer z_mean \<- layer_dense(h, latent_dim, name = ‘latent_mu’)
-z_log_var \<- layer_dense(h, latent_dim, name = ‘latent_sigma’)
+###### flattern the layer
 
-# Reparameterization trick
+``` r
+flat <- layer_flatten(conv_4)
+```
 
-\#We define a sampling function to sample from the distribution. \# z =
-z_mean + sigma\*epsilon \#where, sigma = exp(log_var/2) \#z_mean (mu) is
-a vector that represents the the mean point of the distribution.
-\#log_var is a vector that represents the logarithm of the variance of
-each dimension. \#epsilon is a point sampled from the standard normal
-distribution
+###### Dense layer and latent space
 
-sampling \<- function(arg){ z_mean \<- arg\[, 1:(latent_dim)\] z_log_var
-\<- arg\[, (latent_dim + 1):(2 \* latent_dim)\]
+``` r
+h <- layer_dense(flat, intermediate_dim, activation = "relu") #hidden layer
+z_mean <- layer_dense(h, latent_dim, name = 'latent_mu')
+z_log_var <- layer_dense(h, latent_dim, name = 'latent_sigma')
+```
 
-epsilon \<- k_random_normal( shape = c(k_shape(z_mean)\[\[1\]\]),
-mean=0., stddev=epsilon_std )
+###### Reparameterization trick
 
-z_mean + k_exp(z_log_var/2)\*epsilon }
+``` r
+sampling <- function(arg){
+  z_mean <- arg[, 1:(latent_dim)]
+  z_log_var <- arg[, (latent_dim + 1):(2 * latent_dim)]
+  
+  epsilon <- k_random_normal(
+    shape = c(k_shape(z_mean)[[1]]), 
+    mean=0.,
+    stddev=epsilon_std
+  )
+  
+  z_mean + k_exp(z_log_var/2)*epsilon
+}
+```
 
-# Note: This trick allows us to train both mu and sigma in the training process.
+> **Note**: The reparameterization trick allows the model to train both
+> mu and sigma of the latent space.
+
+> **Note**: We define a sampling function to sample from the
+> distribution. z = z_mean + sigma\*epsilon;  
+> where, sigma = exp(log_var/2)
+
+-   z_mean (mu) is a vector that represents the the mean point of the
+    distribution;
+-   log_var is a vector that represents the logarithm of the variance of
+    each dimension;
+-   epsilon is a point sampled from the standard normal distribution.
 
 # We define the z by creating a sample vector from the latent distribution
 
