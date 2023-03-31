@@ -10,7 +10,7 @@ library(OpenImageR)
   #files_train <- list.files("Example_Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 #Train images
-files_train <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 # Resize images
 

@@ -36,7 +36,7 @@ test_yolo %>% load_darknet_weights("yolov3.weights")
 
 #Import images and generate predictions
 
-train_img_paths <- data.frame(list.files("Example_Image",  full.names = TRUE, pattern = ".jpg", all.files = TRUE))
+train_img_paths <- data.frame(list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE))
 
 train_imgs <- train_img_paths %>%
   map(~ {
@@ -94,7 +94,7 @@ table_yolo = data.frame(labels[i]) %>%
          width = xmax - xmin,
          height = ymax - ymin) %>% 
   select(class_id, x_centre, y_centre, width, height) %>% 
-  write.table(file = paste0("Train/Labels/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
+  write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
 }}
 
 #Exportlabels_txt()
@@ -107,7 +107,7 @@ Exportlabels_Class_txt = function(){
     table_yolo = data.frame(labels[i]) %>%
       mutate(class_id = label_id) %>% 
       select(class_id) %>% 
-      write.table(file = paste0("Train/Labels_Class/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
+      write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
   }}
 
 Exportlabels_Class_txt()
@@ -129,7 +129,7 @@ for(i in 1:length(labels)) {
 
   ## Export excel sheet
 library(writexl)
-write_xlsx(mode, "Train/Labels_Dummy/Labels_Dummy.xlsx")
+write_xlsx(mode, "Dataset/Features/Labels_Dummy.xlsx")
 
 #Plot images with the objects detected
 plot_boxes(
@@ -143,7 +143,7 @@ plot_boxes(
 #Test Dataset
 
 # Import test images and generate predictions
-test_img_paths <- list.files("Test/Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+test_img_paths <- list.files("Dataset/Test_filtered/",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 test_imgs <- test_img_paths %>%
   map(~ {
@@ -189,7 +189,7 @@ Exportlabels_txt_test = function(){
              width = xmax - xmin,
              height = ymax - ymin) %>% 
       select(class_id, x_centre, y_centre, width, height) %>% 
-      write.table(file = paste0("Test/Labels/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
+      write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
   }}
 
 Exportlabels_txt_test()
@@ -202,7 +202,7 @@ Exportlabels_Class_txt = function(){
     table_yolo = data.frame(labels[i]) %>%
       mutate(class_id = label_id) %>% 
       select(class_id) %>% 
-      write.table(file = paste0("Test/Labels_Class/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
+      write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
   }}
 
 Exportlabels_Class_txt()
