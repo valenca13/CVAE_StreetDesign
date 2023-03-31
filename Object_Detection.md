@@ -88,7 +88,7 @@ test_yolo
 > github. Therefore, you should download and run the code with the
 > weights.
 
-##### 4. Calculate predictions for new images
+##### 4. Calculate predictions for the images
 
 ``` r
 train_img_paths <- list.files("Example_Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
@@ -108,8 +108,11 @@ train_preds <- test_yolo %>%
   predict(train_imgs) 
 ```
 
+> **Note**: In this example, we use **small sample** of the original
+> database.
+
 > **Note**: The same code is used for training and test data. The
-> crucial point that needs to be changes is in importing the files. For
+> crucial point that needs to be changed is in importing the files. For
 > training data use *“Dataset/Train_filtered”* and for test data use
 > *“Dataset/Test_filtered”*. Also we recommend adapting the name of
 > variables according to the type of dataset.
@@ -202,7 +205,7 @@ table_yolo = data.frame(labels[i]) %>%
          width = xmax - xmin,
          height = ymax - ymin) %>% 
   select(class_id, x_centre, y_centre, width, height) %>% 
-  write.table(file = paste0("Train/Labels/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)   #Save labels in folder
+  write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)   #Put the path of the folder where the images should be saved
   }}
 
 #Exportlabels_txt()
@@ -212,6 +215,10 @@ table_yolo = data.frame(labels[i]) %>%
 
 -   YOLO format = \[class_id, x_centre, y_centre, width, height\].
 
+> **Note**: Adjust the path where the features should be saved and
+> activate the “Exportlabels_txt()” function. This step should also be
+> done when exporting other labels.
+
 ###### b) Export labels with a single vector presenting the classes
 
 ``` r
@@ -220,13 +227,13 @@ Exportlabels_Class_txt = function(){
     table_yolo = data.frame(labels[i]) %>%
       mutate(class_id = label_id) %>% 
       select(class_id) %>% 
-      write.table(file = paste0("Train/Labels_Class/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE) #Save labels in folder
+      write.table(file = paste0("Train/Labels_Class/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE) ##Put the path of the folder where the images should be saved
   }}
 
 #Exportlabels_Class_txt()
 ```
 
-> **Note**: In the Coco dataset that the YOLOv3 was trained, the classes
+> **Note**: In the COCO dataset that the YOLOv3 was trained, the classes
 > *Car*; *bus*; *truck*; *person*; *bicycle*; correspond to the
 > following id: \[3, 6, 8, 1, 2\].
 

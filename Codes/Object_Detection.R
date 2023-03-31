@@ -94,7 +94,7 @@ table_yolo = data.frame(labels[i]) %>%
          width = xmax - xmin,
          height = ymax - ymin) %>% 
   select(class_id, x_centre, y_centre, width, height) %>% 
-  write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
+  write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE) #Put the path of the folder where the images should be saved
 }}
 
 #Exportlabels_txt()
@@ -107,7 +107,7 @@ Exportlabels_Class_txt = function(){
     table_yolo = data.frame(labels[i]) %>%
       mutate(class_id = label_id) %>% 
       select(class_id) %>% 
-      write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
+      write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE) #Put the path of the folder where the images should be saved
   }}
 
 Exportlabels_Class_txt()
@@ -129,7 +129,7 @@ for(i in 1:length(labels)) {
 
   ## Export excel sheet
 library(writexl)
-write_xlsx(mode, "Dataset/Features/Labels_Dummy.xlsx")
+#write_xlsx(mode, "Dataset/Features/features_Dummy.xlsx") # Save features in excel file
 
 #Plot images with the objects detected
 plot_boxes(
@@ -189,7 +189,7 @@ Exportlabels_txt_test = function(){
              width = xmax - xmin,
              height = ymax - ymin) %>% 
       select(class_id, x_centre, y_centre, width, height) %>% 
-      write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
+      write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE) #Put the path of the folder where the images should be saved
   }}
 
 Exportlabels_txt_test()
@@ -202,7 +202,7 @@ Exportlabels_Class_txt = function(){
     table_yolo = data.frame(labels[i]) %>%
       mutate(class_id = label_id) %>% 
       select(class_id) %>% 
-      write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE)
+      write.table(file = paste0("Dataset/Features/", images_names[i], ".txt"), sep = ",", row.names = FALSE, col.names = FALSE) #Put the path of the folder where the images should be saved
   }}
 
 Exportlabels_Class_txt()
