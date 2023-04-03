@@ -25,7 +25,7 @@ The methodology consists of three main tasks:
 
 * Image collection and preprocessing: 
 
-We extracted street images from the Mapillary database. Then performed a manual filtering process, removing images of low quality. The database after filtered can be found [here]("Database/Images/"). To avoid overfitting, we performed image augmentation. 
+We extracted street images from the Mapillary database. Then performed a manual filtering process, removing images of low quality. The database after filtered can be found [here](Database/Images/). To avoid overfitting, we performed image augmentation. 
 
 * Object detection/ segmentation: 
 
@@ -39,13 +39,13 @@ We tested two types of models. The aim is to generate images conditioned by spec
 
 #### [1. Dataset]("Dataset/")
 
-a) The original dataset used for [Training]("Dataset/Images/Train_filtered/") and [Test]("Dataset/Images/Test_filtered/") filtered manually, without augmentation.
+a) The original dataset used for [Training](Dataset/Images/Train_filtered/) and [Test](Dataset/Images/Test_filtered/) filtered manually, without augmentation.
 
 b) Features extracted from object detection in two formats for inputs in the Conditional Variational Autoencoder: 
 
-* Dummy variables indicating if objects were present or not in the image for [Training]("Dataset/Features/Features_Dummy_Train/") and [Test]("Dataset/Features/Features_Dummy_Test/); 
+* Dummy variables indicating if objects were present or not in the image for [Training](Dataset/Features/Features_Dummy_Train/) and [Test](Dataset/Features/Features_Dummy_Test/); 
 
-* Counting the number of each object present in the image for [Training]("Dataset/Features/Features_Class_Train/") and [Test]("Dataset/Features/Features_Class_Test"). 
+* Counting the number of each object present in the image for [Training](Dataset/Features/Features_Class_Train/) and [Test](Dataset/Features/Features_Class_Test). 
 
 >**Note**: In the example of the paper we used only the first option as inputs for the Conditional Variational Autoencoder. However, we make available the code and dataset for both options. 
 
@@ -55,15 +55,15 @@ We share the codes in R used for the preprocessing of the images (image augmenta
 
 ##### Preprocessing 
 
-a. [Image augmentation]("Codes/Image_Augmentation.R")
+a. [Image augmentation](Codes/Image_Augmentation.R)
 
-b. [Object detection]("Codes/Object_Detection.R")
+b. [Object detection](Codes/Object_Detection.R)
 
 ##### Generative Deep Modelling
 
-c. [Variational Autoencoder]("Codes/VAE_StreetDesign.R")
+c. [Variational Autoencoder](Codes/VAE_StreetDesign.R)
 
-d. [Conditional Variational Autoencoder]("Codes/ConditionalVAE_StreetDesign.R)
+d. [Conditional Variational Autoencoder](Codes/ConditionalVAE_StreetDesign.R)
 
 
 #### [3. Guidelines](Guidelines/)
@@ -72,13 +72,13 @@ We reproduce some results in RMarkdown in order for an easier understanding of t
 
 ##### Preprocessing 
 
-a. [Image Augmentation](Guidelines/Image_Augmentation.md)
+a. [Image Augmentation](Image_Augmentation.md)
 
-b. [Object Detection](Guidelines/Object_Detection.md)
+b. [Object Detection](Object_Detection.md)
 
 ##### Generative Deep Modelling
 
-c. [Variational Autoencoder](Guidelines/VAE.md)
+c. [Variational Autoencoder](VAE.md)
 
-d. [Conditional Variational Autoencoder](Guidelines/CVAE.md)
+d. [Conditional Variational Autoencoder](CVAE.md)
 
