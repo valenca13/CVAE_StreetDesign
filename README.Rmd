@@ -66,19 +66,19 @@ c. [Variational Autoencoder]("Codes/VAE_StreetDesign.R")
 d. [Conditional Variational Autoencoder]("Codes/ConditionalVAE_StreetDesign.R)
 
 
-#### [3. Guidelines]("Guidelines/")
+#### [3. Guidelines](Guidelines/)
 
 We reproduce some results in RMarkdown in order for an easier understanding of the steps taken in each task. 
 
 ##### Preprocessing 
 
-a. [Image Augmentation]("Guidelines/Image_Augmentation.md")
+a. [Image Augmentation](Guidelines/Image_Augmentation.md)
 
-b. [Object Detection]("Guidelines/Object_Detection.md")
+b. [Object Detection](Guidelines/Object_Detection.md)
 
 ##### Generative Deep Modelling
 
-c. [Variational Autoencoder]("Guidelines/VAE.md")
+c. [Variational Autoencoder](Guidelines/VAE.md)
 
-d. [Conditional Variational Autoencoder]("Guidelines/CVAE.md")
+d. [Conditional Variational Autoencoder](Guidelines/CVAE.md)
 

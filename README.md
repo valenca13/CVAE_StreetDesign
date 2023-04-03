@@ -101,19 +101,19 @@ autoencoder (images and features as inputs).
 4.  [Conditional Variational
     Autoencoder](%22Codes/ConditionalVAE_StreetDesign.R)
 
-#### [3. Guidelines](%22Guidelines/%22)
+#### [3. Guidelines](Guidelines/)
 
 We reproduce some results in RMarkdown in order for an easier
 understanding of the steps taken in each task.
 
 ##### Preprocessing
 
-1.  [Image Augmentation](%22Guidelines/Image_Augmentation.md%22)
+1.  [Image Augmentation](Guidelines/Image_Augmentation.md)
 
-2.  [Object Detection](%22Guidelines/Object_Detection.md%22)
+2.  [Object Detection](Guidelines/Object_Detection.md)
 
 ##### Generative Deep Modelling
 
-3.  [Variational Autoencoder](%22Guidelines/VAE.md%22)
+3.  [Variational Autoencoder](Guidelines/VAE.md)
 
-4.  [Conditional Variational Autoencoder](%22Guidelines/CVAE.md%22)
+4.  [Conditional Variational Autoencoder](Guidelines/CVAE.md)
