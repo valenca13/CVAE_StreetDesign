@@ -134,10 +134,10 @@ dim(x_test)
 **a) Training parameters** 
 
 ```{r}
-batch_size <- 100L   # number of training samples used in one iteration
+batch_size <- 25L   # number of training samples used in one iteration
 #Note: Popular batch sizes include 32, 64, and 128 samples.
 
-epochs <- 30L  # number of times that the learning algorithm will work through the entire training dataset
+epochs <- 100L  # number of times that the learning algorithm will work through the entire training dataset
 
 original_dim <- c(img_rows, img_cols, img_channels)
 
@@ -145,8 +145,8 @@ filters <- 1L #Detects the patterns on the data.
 
 # Convolution kernel size
 num_conv <- 3L
-latent_dim <- 2L
 intermediate_dim <- 128L
+latent_dim <- 2L
 epsilon_std <- 1.0
 ```
 
