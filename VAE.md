@@ -23,9 +23,9 @@ library(listarrays)
 ##### 2. Import and treat datasets
 
 ``` r
-files_train <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
-files_test <- list.files("Dataset/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 ```
 
 ##### Resize images and assign to a list.
@@ -72,7 +72,7 @@ train_array <- array(unlist(Results_train), dim=c(n_images_train,img_rows, img_c
 dim(train_array)
 ```
 
-    ## [1] 1269  240  320    3
+    ## [1] 1265  240  320    3
 
 **b) Test data**
 
@@ -140,7 +140,7 @@ x_test <- test_array %>%
 dim(x_train)
 ```
 
-    ## [1] 1269  240  320    3
+    ## [1] 1265  240  320    3
 
 ##### 4. VARIATIONAL AUTOENCODER
 
@@ -169,7 +169,7 @@ epsilon_std <- 1.0
 
 **b) Model definition**
 
-###### Encoder
+###### ENCODER
 
 ``` r
 x <- layer_input(shape = original_dim, name = 'encoder_input')
@@ -211,13 +211,13 @@ conv_4 <- layer_conv_2d(
 )
 ```
 
-###### flattern the layer
+###### Flattern the layer
 
 ``` r
 flat <- layer_flatten(conv_4)
 ```
 
-###### Dense layer and latent space
+###### Define dense layers
 
 ``` r
 h <- layer_dense(flat, intermediate_dim, activation = "relu") #hidden layer
@@ -255,82 +255,165 @@ sampling <- function(arg){
     each dimension;
 -   epsilon is a point sampled from the standard normal distribution.
 
-# We define the z by creating a sample vector from the latent distribution
+###### LATENT SPACE: Define “z” by creating a sample vector from the latent distribution
 
-z \<- layer_concatenate(list(z_mean, z_log_var)) %\>%  
-layer_lambda(sampling)
+``` r
+z <- layer_concatenate(list(z_mean, z_log_var)) %>%   
+  layer_lambda(sampling)
+```
 
-\#“layer_concatenate” takes a list of tensors and unction returns a
-single vector! \#Note: z is the lambda custom layer we are adding from
-gradient descent calculations
+###### Define and summarize the encoder model
 
-\#Define and summarize the encoder model encoder \<- keras_model(x,
-c(z_mean,z_log_var)) summary(encoder)
+``` r
+encoder <- keras_model(x, c(z_mean,z_log_var))
+summary(encoder)
+```
 
-\#DECODER
+    ## Model: "model"
+    ## ________________________________________________________________________________
+    ##  Layer (type)             Output Shape      Param #  Connected to               
+    ## ================================================================================
+    ##  encoder_input (InputLaye  [(None, 240, 320  0       []                         
+    ##  r)                       , 3)]                                                 
+    ##  conv2d (Conv2D)          (None, 240, 320,  39       ['encoder_input[0][0]']    
+    ##                            3)                                                   
+    ##  conv2d_1 (Conv2D)        (None, 120, 160,  13       ['conv2d[0][0]']           
+    ##                            1)                                                   
+    ##  conv2d_2 (Conv2D)        (None, 120, 160,  10       ['conv2d_1[0][0]']         
+    ##                            1)                                                   
+    ##  conv2d_3 (Conv2D)        (None, 120, 160,  10       ['conv2d_2[0][0]']         
+    ##                            1)                                                   
+    ##  flatten (Flatten)        (None, 19200)     0        ['conv2d_3[0][0]']         
+    ##  dense (Dense)            (None, 128)       2457728  ['flatten[0][0]']          
+    ##  latent_mu (Dense)        (None, 2)         258      ['dense[0][0]']            
+    ##  latent_sigma (Dense)     (None, 2)         258      ['dense[0][0]']            
+    ## ================================================================================
+    ## Total params: 2,458,316
+    ## Trainable params: 2,458,316
+    ## Non-trainable params: 0
+    ## ________________________________________________________________________________
 
-output_shape \<- c(batch_size, 120L, 160L, filters) \# For the encoder
-to have the same dimensions as the decoder
+##### DECODER
 
-decoder_input \<- layer_input(shape = latent_dim, name =
-‘decoder_input’) \# We need to start with a shape that can be remapped
-to the original image shape.
+``` r
+output_shape <- c(batch_size, 120L, 160L, filters) # For the encoder to have the same dimensions as the decoder
 
-decoder_upsample \<- layer_dense(units = prod(output_shape\[-1\]),
-activation = “relu”) decoder_hidden \<- layer_dense(units =
-intermediate_dim, activation = “relu”)
+decoder_input <- layer_input(shape = latent_dim, name = 'decoder_input')
 
-decoder_reshape \<- layer_reshape(target_shape = output_shape\[-1\])
+decoder_upsample <- layer_dense(units = prod(output_shape[-1]), activation = "relu")
+decoder_hidden <- layer_dense(units = intermediate_dim, activation = "relu")
 
-decoder_deconv_1 \<- layer_conv_2d_transpose( filters = filters,
-kernel_size = c(num_conv, num_conv), strides = c(1L, 1L), padding =
-“same”, activation = “relu” )
+decoder_reshape <- layer_reshape(target_shape = output_shape[-1])
 
-decoder_deconv_2 \<- layer_conv_2d_transpose( filters = filters,
-kernel_size = c(num_conv, num_conv), strides = c(1L, 1L), padding =
-“same”, activation = “relu” )
+decoder_deconv_1 <- layer_conv_2d_transpose(
+  filters = filters,
+  kernel_size = c(num_conv, num_conv),
+  strides = c(1L, 1L),
+  padding = "same",
+  activation = "relu"
+)
 
-decoder_deconv_3\_upsample \<- layer_conv_2d_transpose( filters =
-img_channels, kernel_size = c(3L, 3L), strides = c(2L, 2L), padding =
-“same”, activation = “sigmoid” )
+decoder_deconv_2 <- layer_conv_2d_transpose(
+  filters = filters,
+  kernel_size = c(num_conv, num_conv),
+  strides = c(1L, 1L),
+  padding = "same",
+  activation = "relu"
+)
 
-hidden_decoded \<- decoder_hidden(z) up_decoded \<-
-decoder_upsample(hidden_decoded) reshape_decoded \<-
-decoder_reshape(up_decoded) deconv_1\_decoded \<-
-decoder_deconv_1(reshape_decoded) deconv_2\_decoded \<-
-decoder_deconv_2(deconv_1\_decoded) x_decoded_mean \<-
-decoder_deconv_3\_upsample(deconv_2\_decoded)
+decoder_deconv_3_upsample <- layer_conv_2d_transpose(
+  filters = img_channels,
+  kernel_size = c(3L, 3L),
+  strides = c(2L, 2L),
+  padding = "same",
+  activation = "sigmoid"
+)
 
-\#Defining decoder separately hidden_decoded \<-
-decoder_hidden(decoder_input)  
-up_decoded \<- decoder_upsample(hidden_decoded) reshape_decoded \<-
-decoder_reshape(up_decoded) deconv_1\_decoded \<-
-decoder_deconv_1(reshape_decoded) deconv_2\_decoded \<-
-decoder_deconv_2(deconv_1\_decoded) generator \<-
-decoder_deconv_3\_upsample(deconv_2\_decoded)
 
-decoder \<- keras_model(decoder_input, generator) summary(decoder)
+hidden_decoded <- decoder_hidden(z)
+up_decoded <- decoder_upsample(hidden_decoded)
+reshape_decoded <- decoder_reshape(up_decoded)
+deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
+deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
+x_decoded_mean <- decoder_deconv_3_upsample(deconv_2_decoded)
+```
 
-# Loss function
+> **Note**: The decoder builds up from the latent space until achieves
+> the shape of the input.
 
-## We want to measure how different our normal distribution with parameters mu and log_var is from…
+##### c) Define Loss function
 
-## the standard normal distribution. In this special case, the KL divergence has a closed form.
+``` r
+vae_loss <- function(x, x_decoded_mean){
+  x <- k_flatten(x)
+  x_decoded_mean <- k_flatten(x_decoded_mean)
+  recon_loss <- 1.0 * img_rows * img_cols *loss_binary_crossentropy(x, x_decoded_mean)
+  kl_loss <- -0.5*k_mean(1 + z_log_var - k_square(z_mean) - k_exp(z_log_var), axis = -1L)
+  recon_loss + kl_loss
+}
 
-vae_loss \<- function(x, x_decoded_mean){ recon_loss \<- 1.0 \* img_rows
-\* img_cols *mse(x, x_decoded_mean) kl_loss \<- -0.5*k_mean(1 +
-z_log_var - k_square(z_mean) - k_exp(z_log_var), axis = -1L)
-recon_loss + kl_loss }
-
-vae \<- keras_model(x, x_decoded_mean) vae %\>% compile(optimizer =
-“rmsprop”, loss = vae_loss) summary(vae)
-
-# Model training ———————————————————-
-
-vae %\>% fit( x_train, x_train, shuffle = TRUE, epochs = epochs,
-batch_size = batch_size, validation_data = list(x_test, x_test) )
-
+vae <- keras_model(x, x_decoded_mean)
+vae %>% compile(optimizer = "rmsprop", loss = vae_loss)
 summary(vae)
+```
 
-imageShow(Results_train\[\[1\]\]) imageShow(x_train\[1,,,\])
-\#—————————————————————————–
+    ## Model: "model_1"
+    ## ________________________________________________________________________________
+    ##  Layer (type)             Output Shape      Param #  Connected to               
+    ## ================================================================================
+    ##  encoder_input (InputLaye  [(None, 240, 320  0       []                         
+    ##  r)                       , 3)]                                                 
+    ##  conv2d (Conv2D)          (None, 240, 320,  39       ['encoder_input[0][0]']    
+    ##                            3)                                                   
+    ##  conv2d_1 (Conv2D)        (None, 120, 160,  13       ['conv2d[0][0]']           
+    ##                            1)                                                   
+    ##  conv2d_2 (Conv2D)        (None, 120, 160,  10       ['conv2d_1[0][0]']         
+    ##                            1)                                                   
+    ##  conv2d_3 (Conv2D)        (None, 120, 160,  10       ['conv2d_2[0][0]']         
+    ##                            1)                                                   
+    ##  flatten (Flatten)        (None, 19200)     0        ['conv2d_3[0][0]']         
+    ##  dense (Dense)            (None, 128)       2457728  ['flatten[0][0]']          
+    ##  latent_mu (Dense)        (None, 2)         258      ['dense[0][0]']            
+    ##  latent_sigma (Dense)     (None, 2)         258      ['dense[0][0]']            
+    ##  concatenate (Concatenate  (None, 4)        0        ['latent_mu[0][0]',        
+    ##  )                                                    'latent_sigma[0][0]']     
+    ##  lambda (Lambda)          (None, 2)         0        ['concatenate[0][0]']      
+    ##  dense_2 (Dense)          (None, 128)       384      ['lambda[0][0]']           
+    ##  dense_1 (Dense)          (None, 19200)     2476800  ['dense_2[0][0]']          
+    ##  reshape (Reshape)        (None, 120, 160,  0        ['dense_1[0][0]']          
+    ##                            1)                                                   
+    ##  conv2d_transpose (Conv2D  (None, 120, 160,  10      ['reshape[0][0]']          
+    ##  Transpose)                1)                                                   
+    ##  conv2d_transpose_1 (Conv  (None, 120, 160,  10      ['conv2d_transpose[0][0]'] 
+    ##  2DTranspose)              1)                                                   
+    ##  conv2d_transpose_2 (Conv  (None, 240, 320,  30      ['conv2d_transpose_1[0][0]'
+    ##  2DTranspose)              3)                        ]                          
+    ## ================================================================================
+    ## Total params: 4,935,550
+    ## Trainable params: 4,935,550
+    ## Non-trainable params: 0
+    ## ________________________________________________________________________________
+
+##### d) Model training
+
+``` r
+vae %>% fit(
+  x_train, x_train,
+  shuffle = TRUE, 
+  epochs = epochs, 
+  batch_size = batch_size, 
+  validation_data = list(x_test, x_test)
+)
+```
+
+##### e) Present examples of images generated by the generative model
+
+``` r
+imageShow(x_train[1,,,])
+imageShow(x_test[1,,,])
+```
+
+![](VAE_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+
+> **Note**: In this example we are printing images with id=1 of the
+> training and test datasets.

@@ -28,9 +28,9 @@ library(listarrays)
 ##### 2. Import and treat datasets
 
 ```{r message=FALSE, warning=FALSE}
-files_train <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
-files_test <- list.files("Dataset/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 ```
 
 ##### Resize images and assign to a list. 
@@ -56,10 +56,10 @@ dim(Results_train[[2]])
 
 >**Note**: 240(height-row) x 320(width-column) x 3(channels - RGB) 
 
-###### Show an example of an image in training dataset
+###### Show an example of an image in the training dataset
 
 ```{r message=FALSE, warning=FALSE}
-imageShow(Results_train[[8]])
+imageShow(Results_train[[35]])
 ```
 
 ###### Convert list of images into arrays
@@ -78,7 +78,7 @@ dim(train_array)
 
 **b) Test data**
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 Results_test <- list()
 for(i in seq_along(files_test)){
   Image <- readImage(files_test[i])
@@ -94,7 +94,7 @@ for(i in seq_along(files_test)){
 dim(Results_test[[2]])
 ```
 
-###### Show an example of an image in training dataset
+###### Show an example of an image in the test dataset
 
 ```{r}
 imageShow(Results_test[[3]])
@@ -126,6 +126,7 @@ x_test <- test_array %>%
 
 ```{r}
 dim(x_train)
+dim(x_test)
 ```
 
 ##### 4. VARIATIONAL AUTOENCODER
@@ -154,7 +155,7 @@ epsilon_std <- 1.0
 
 **b) Model definition**
 
-###### Encoder
+##### ENCODER
 
 ```{r}
 x <- layer_input(shape = original_dim, name = 'encoder_input')
@@ -197,13 +198,13 @@ conv_4 <- layer_conv_2d(
 ```
 
 
-###### flattern the layer
+###### Flattern the layer
 
 ```{r}
 flat <- layer_flatten(conv_4)
 ```
 
-###### Dense layer and latent space
+###### Define dense layers
 
 ```{r}
 h <- layer_dense(flat, intermediate_dim, activation = "relu") #hidden layer
@@ -228,7 +229,7 @@ sampling <- function(arg){
 }
 ```
 
->**Note**: The reparameterization trick allows the model to train both mu and sigma of the latent space.
+>**Note**: The reparameterization trick allows the model to train both **mu** and **sigma** of the latent space.
 
 >**Note**: We define a sampling function to sample from the distribution. 
 z = z_mean + sigma*epsilon;  
@@ -238,24 +239,29 @@ where, sigma = exp(log_var/2)
 * log_var is a vector that represents the logarithm of the variance of each dimension;
 * epsilon is a point sampled from the standard normal distribution. 
 
-# We define the z by creating a sample vector from the latent distribution
+
+##### LATENT SPACE: Define "z" by creating a sample vector from the latent distribution
+
+```{r}
 z <- layer_concatenate(list(z_mean, z_log_var)) %>%   
   layer_lambda(sampling)
+```
 
-#"layer_concatenate" takes a list of tensors and unction returns a single vector!
-#Note: z is the lambda custom layer we are adding from gradient descent calculations
 
-#Define and summarize the encoder model
+###### Define and summarize the encoder model
+
+```{r}
 encoder <- keras_model(x, c(z_mean,z_log_var))
 summary(encoder)
+```
 
+##### DECODER
 
-#DECODER
+```{r}
 
 output_shape <- c(batch_size, 120L, 160L, filters) # For the encoder to have the same dimensions as the decoder
 
 decoder_input <- layer_input(shape = latent_dim, name = 'decoder_input')
-# We need to start with a shape that can be remapped to the original image shape.
 
 decoder_upsample <- layer_dense(units = prod(output_shape[-1]), activation = "relu")
 decoder_hidden <- layer_dense(units = intermediate_dim, activation = "relu")
@@ -293,24 +299,18 @@ reshape_decoded <- decoder_reshape(up_decoded)
 deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
 deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
 x_decoded_mean <- decoder_deconv_3_upsample(deconv_2_decoded)
+```
 
-#Defining decoder separately
-hidden_decoded <- decoder_hidden(decoder_input)   
-up_decoded <- decoder_upsample(hidden_decoded)
-reshape_decoded <- decoder_reshape(up_decoded)
-deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
-deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
-generator <- decoder_deconv_3_upsample(deconv_2_decoded)
+>**Note**: The decoder builds up from the latent space until it achieves the shape of the input. 
 
-decoder <- keras_model(decoder_input, generator)
-summary(decoder)
 
-# Loss function
-## We want to measure how different our normal distribution with parameters mu and log_var is from...
-## the standard normal distribution. In this special case, the KL divergence has a closed form. 
+##### c) Define Loss function
 
+```{r}
 vae_loss <- function(x, x_decoded_mean){
-  recon_loss <- 1.0 * img_rows * img_cols *mse(x, x_decoded_mean)
+  x <- k_flatten(x)
+  x_decoded_mean <- k_flatten(x_decoded_mean)
+  recon_loss <- 1.0 * img_rows * img_cols *loss_binary_crossentropy(x, x_decoded_mean)
   kl_loss <- -0.5*k_mean(1 + z_log_var - k_square(z_mean) - k_exp(z_log_var), axis = -1L)
   recon_loss + kl_loss
 }
@@ -318,9 +318,11 @@ vae_loss <- function(x, x_decoded_mean){
 vae <- keras_model(x, x_decoded_mean)
 vae %>% compile(optimizer = "rmsprop", loss = vae_loss)
 summary(vae)
+```
 
-# Model training ----------------------------------------------------------
+##### d) Model training 
 
+```{r}
 vae %>% fit(
   x_train, x_train,
   shuffle = TRUE, 
@@ -328,10 +330,20 @@ vae %>% fit(
   batch_size = batch_size, 
   validation_data = list(x_test, x_test)
 )
+```
 
-summary(vae)
+##### e) Present examples of images generated by the generative model
 
-imageShow(Results_train[[1]])
+###### Generated image from the the training database
+
+```{r}
 imageShow(x_train[1,,,])
-#-----------------------------------------------------------------------------
+```
 
+###### Generated image from the test database
+
+```{r}
+imageShow(x_test[1,,,])
+```
+
+>**Note**: In this example we are printing images with id=1 of the training and test datasets. 

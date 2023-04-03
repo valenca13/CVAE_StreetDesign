@@ -14,9 +14,9 @@ library(OpenImageR)
 library(readxl)
 
 
-files_train <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
-files_test <- list.files("Dataset/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 ## Note: The labels are already in format of dummy variables (One-hot encoding). No need to use "to_categorical" function. 
 
@@ -87,10 +87,9 @@ x_test <- test_array %>%
 # Parameters --------------------------------------------------------------
 
   ## Traning parameters
-batch_size <- 100L   # number of training samples used in one iteration
-#Note: Popular batch sizes include 32, 64, and 128 samples.
+batch_size <- 2L   # number of training samples used in one iteration
 
-epochs <- 30L  # number of times that the learning algorithm will work through the entire training dataset
+epochs <- 50L  # number of times that the learning algorithm will work through the entire training dataset
 
 original_dim <- c(img_rows, img_cols, img_channels)
 
@@ -99,8 +98,8 @@ filters <- 1L #Detects the patterns on the data.
 
   # Convolution kernel size
 num_conv <- 3L
-latent_dim <- 2L
 intermediate_dim <- 128L
+latent_dim <- 2L
 epsilon_std <- 1.0
 
 
@@ -184,8 +183,6 @@ sampling <- function(arg){
 z <- layer_concatenate(list(z_mean, z_log_var)) %>%   
   layer_lambda(sampling)
 
-#"layer_concatenate" takes a list of tensors and unction returns a single vector!
-#Note: z is the lambda custom layer we are adding from gradient descent calculations
 
 #Define and summarize the encoder model
 encoder <- keras_model(x, c(z_mean,z_log_var))
@@ -197,7 +194,6 @@ summary(encoder)
 output_shape <- c(batch_size, 120L, 160L, filters) # For the encoder to have the same dimensions as the decoder
 
 decoder_input <- layer_input(shape = latent_dim, name = 'decoder_input')
-# We need to start with a shape that can be remapped to the original image shape.
 
 decoder_upsample <- layer_dense(units = prod(output_shape[-1]), activation = "relu")
 decoder_hidden <- layer_dense(units = intermediate_dim, activation = "relu")
@@ -225,7 +221,7 @@ decoder_deconv_3_upsample <- layer_conv_2d_transpose(
   kernel_size = c(3L, 3L),
   strides = c(2L, 2L),
   padding = "same",
-  activation = "sigmoid"
+  activation = "softmax"
 )
 
 
@@ -237,22 +233,24 @@ deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
 x_decoded_mean <- decoder_deconv_3_upsample(deconv_2_decoded)
 
 #Defining decoder separately
-hidden_decoded <- decoder_hidden(decoder_input)   
-up_decoded <- decoder_upsample(hidden_decoded)
-reshape_decoded <- decoder_reshape(up_decoded)
-deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
-deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
-generator <- decoder_deconv_3_upsample(deconv_2_decoded)
+#hidden_decoded <- decoder_hidden(decoder_input)   
+#up_decoded <- decoder_upsample(hidden_decoded)
+#reshape_decoded <- decoder_reshape(up_decoded)
+#deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
+#deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
+#generator <- decoder_deconv_3_upsample(deconv_2_decoded)
 
-decoder <- keras_model(decoder_input, generator)
-summary(decoder)
+d#ecoder <- keras_model(decoder_input, generator)
+#summary(decoder)
 
 # Loss function
 ## We want to measure how different our normal distribution with parameters mu and log_var is from...
 ## the standard normal distribution. In this special case, the KL divergence has a closed form. 
 
 vae_loss <- function(x, x_decoded_mean){
-  recon_loss <- 1.0 * img_rows * img_cols *mse(x, x_decoded_mean)
+  x <- k_flatten(x)
+  x_decoded_mean <- k_flatten(x_decoded_mean)
+  recon_loss <- 1.0 * img_rows * img_cols *loss_binary_crossentropy(x, x_decoded_mean)
   kl_loss <- -0.5*k_mean(1 + z_log_var - k_square(z_mean) - k_exp(z_log_var), axis = -1L)
   recon_loss + kl_loss
 }
@@ -273,6 +271,6 @@ vae %>% fit(
 
 summary(vae)
 
+# Compare image from the original database and the generated image. 
 imageShow(Results_train[[1]])
 imageShow(x_train[1,,,])
-#-----------------------------------------------------------------------------
