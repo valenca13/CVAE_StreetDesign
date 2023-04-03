@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Conditional Variational Autoencoder"
 output: github_document
 ---
 

@@ -37,9 +37,9 @@ We tested two types of models. The aim is to generate images conditioned by spec
 
 ### Outline:
 
-#### [1. Dataset]("Dataset/")
+#### 1. Dataset
 
-a) The original dataset used for [Training](Dataset/Images/Train_filtered/) and [Test](Dataset/Images/Test_filtered/) filtered manually, without augmentation.
+a) The [original dataset](Dataset/Images/) used for [Training](Dataset/Images/Train_filtered/) and [Test](Dataset/Images/Test_filtered/) filtered manually, without augmentation.
 
 b) Features extracted from object detection in two formats for inputs in the Conditional Variational Autoencoder: 
 
@@ -49,9 +49,9 @@ b) Features extracted from object detection in two formats for inputs in the Con
 
 >**Note**: In the example of the paper we used only the first option as inputs for the Conditional Variational Autoencoder. However, we make available the code and dataset for both options. 
 
-#### [2. Codes]("Codes/")
+#### 2. Codes
 
-We share the codes in R used for the preprocessing of the images (image augmentation and object detection) and also to perform the variational autoenconder (only images as inputs) and the conditional variational autoencoder (images and features as inputs). 
+We share the [codes in R](Codes/) used for the preprocessing of the images (image augmentation and object detection) and also to perform the variational autoenconder (only images as inputs) and the conditional variational autoencoder (images and features as inputs). 
 
 ##### Preprocessing 
 
@@ -66,7 +66,7 @@ c. [Variational Autoencoder](Codes/VAE_StreetDesign.R)
 d. [Conditional Variational Autoencoder](Codes/ConditionalVAE_StreetDesign.R)
 
 
-#### [3. Guidelines](Guidelines/)
+#### 3. Guidelines
 
 We reproduce some results in RMarkdown in order for an easier understanding of the steps taken in each task. 
 

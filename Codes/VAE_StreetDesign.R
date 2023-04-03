@@ -232,17 +232,6 @@ deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
 deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
 x_decoded_mean <- decoder_deconv_3_upsample(deconv_2_decoded)
 
-#Defining decoder separately
-#hidden_decoded <- decoder_hidden(decoder_input)   
-#up_decoded <- decoder_upsample(hidden_decoded)
-#reshape_decoded <- decoder_reshape(up_decoded)
-#deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
-#deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
-#generator <- decoder_deconv_3_upsample(deconv_2_decoded)
-
-d#ecoder <- keras_model(decoder_input, generator)
-#summary(decoder)
-
 # Loss function
 ## We want to measure how different our normal distribution with parameters mu and log_var is from...
 ## the standard normal distribution. In this special case, the KL divergence has a closed form. 

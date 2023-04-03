@@ -59,9 +59,9 @@ also tried a simpler version of the model, without the features
 
 ### Outline:
 
-#### [1. Dataset](%22Dataset/%22)
+#### 1. Dataset
 
-1)  The original dataset used for
+1)  The [original dataset](Dataset/Images/) used for
     [Training](Dataset/Images/Train_filtered/) and
     [Test](Dataset/Images/Test_filtered/) filtered manually, without
     augmentation.
@@ -81,12 +81,12 @@ also tried a simpler version of the model, without the features
 > inputs for the Conditional Variational Autoencoder. However, we make
 > available the code and dataset for both options.
 
-#### [2. Codes](%22Codes/%22)
+#### 2. Codes
 
-We share the codes in R used for the preprocessing of the images (image
-augmentation and object detection) and also to perform the variational
-autoenconder (only images as inputs) and the conditional variational
-autoencoder (images and features as inputs).
+We share the [codes in R](Codes/) used for the preprocessing of the
+images (image augmentation and object detection) and also to perform the
+variational autoenconder (only images as inputs) and the conditional
+variational autoencoder (images and features as inputs).
 
 ##### Preprocessing
 
@@ -101,7 +101,7 @@ autoencoder (images and features as inputs).
 4.  [Conditional Variational
     Autoencoder](Codes/ConditionalVAE_StreetDesign.R)
 
-#### [3. Guidelines](Guidelines/)
+#### 3. Guidelines
 
 We reproduce some results in RMarkdown in order for an easier
 understanding of the steps taken in each task.

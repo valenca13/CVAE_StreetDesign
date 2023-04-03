@@ -14,8 +14,6 @@ library(recolorize)
 library(OpenImageR)
 library(readxl)
 
-#Import images and features
-
 files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 #files_train_labels <- list.files("Dataset/Features/Features_Class_Train/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
 labels_train <- read_excel('Dataset/Features/Features_Dummy_Train/Labels_Dummy.xlsx')
@@ -24,7 +22,7 @@ files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pat
 #files_test_labels <- list.files("Dataset/Features/Features_Class_Test/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
 labels_test <- read_excel('Dataset/Features/Features_Dummy_Test/Labels_Dummy_test.xlsx')
 
-## Note: The features are already in format of dummy variables (One-hot encoding). No need to use "to_categorical" function. 
+## Note: The labels are already in format of dummy variables (One-hot encoding). No need to use "to_categorical" function. 
 
 # Training data
 Results_train <- list()
@@ -40,14 +38,9 @@ for(i in seq_along(files_train)){
 # #Convert labels into a "classification". Only images that appear people. 
 #labels_train$X.person. <- as.numeric(labels_train$X.person.)
 labels_train$X.person. <- as.integer(labels_train$X.person.)
-#labels_train$X.car. <- as.integer(labels_train$X.car.)
-#labels_train$X.bus. <- as.integer(labels_train$X.bus.)
-#labels_train$X.truck. <- as.integer(labels_train$X.truck.)
-
-y_t <- data.frame(labels_train[-c(1:3)]) %>% 
+y_train <- data.frame(labels_train[-c(1:3)]) %>% 
   as.matrix()
-#y_train <- data.frame(labels_train) %>% 
-  #as.matrix()
+
 
 #Use all the labels in the image. 
 
@@ -56,10 +49,10 @@ y_t <- data.frame(labels_train[-c(1:3)]) %>%
 #labels_train$X.truck. <- as.integer(labels_train$X.truck.)
 
 
-y_train <- to_categorical(y_t, num_classes = NULL) %>%
-  as.integer() %>% 
-  array() %>% 
-  expand_dims(which_dim = 1L)
+#y_train <- to_categorical(y_t, num_classes = NULL) #%>%
+  #as.integer() %>% 
+  #array() #%>% 
+  #expand_dims(which_dim = 1L)
 
 #y_train <- to_categorical(y_t, num_classes = NULL) #%>%
   #array()
@@ -70,23 +63,20 @@ y_train <- to_categorical(y_t, num_classes = NULL) %>%
 
 
 
-
+#labels_test$X.car. <- as.integer(labels_test$X.car.)
+#labels_test$X.bus. <- as.integer(labels_test$X.bus.)
+#labels_test$X.truck. <- as.integer(labels_test$X.truck.)
 labels_test$X.person. <- as.integer(labels_test$X.person.)
-labels_test$X.car. <- as.integer(labels_test$X.car.)
-labels_test$X.bus. <- as.integer(labels_test$X.bus.)
-labels_test$X.truck. <- as.integer(labels_test$X.truck.)
-
-
-y_te <- data.frame(labels_test[-c(1:3)]) %>% 
+y_test <- data.frame(labels_test[-c(1:3)]) %>% 
  as.matrix() #%>% 
 
-y_test <- data.frame(labels_test) %>% 
-  as.matrix()
 
-y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") %>% 
-  as.integer() %>% 
-  array() %>% 
-  expand_dims(which_dim = 1L)
+y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") #%>% 
+
+#%>% 
+  #as.integer() %>% 
+  #array() #%>% 
+  #expand_dims(which_dim = 1L)
 
 ##Taking out images for trying to fit the model.
 #y_train <- array(y_train[-c(11:114),])
@@ -98,7 +88,7 @@ dim(Results_train[[2]])
 
 
 #show images
-imageShow(Results_train[[35]])
+imageShow(Results_train[[300]])
 
 # Convert list of images into arrays
 #train_array <- array()
@@ -110,6 +100,8 @@ train_array <- array(unlist(Results_train), dim=c(1265,240,320,3))
 dim(train_array)
 
 
+dim(train_array)
+print(train_array[1])
 # Test data
 Results_test <- list()
 for(i in seq_along(files_test)){
@@ -131,7 +123,7 @@ imageShow(Results_test[[3]])
 
 test_array <- array(unlist(Results_test), dim=c(243,240,320,3))
 
-# CONDITIONAL VARIATIONAL AUTOENCODER
+# VARIATIONAL AUTOENCODER
 
 ## Input image dimensions
 
@@ -187,8 +179,10 @@ filters <- 1L #Detects the patterns on the data.
 
 # Convolution kernel size
 num_conv <- 3L
+
+#Dimensionality
+intermediate_dim <- 128L
 latent_dim <- 2L
-intermediate_dim <- 512L
 epsilon_std <- 1.0
 
 #Length of y_train
@@ -197,9 +191,6 @@ x_train_shape <- dim(x_train)[1]
 
 y_train_shape <- dim(y_train)[2] 
 #y_train_shape <- col(y_train)
-
-
-#verificar isso
 
 #Model definition --------------------------------------------------------
 
@@ -228,7 +219,7 @@ conv_2 <- layer_conv_2d(
 conv_3 <- layer_conv_2d(
   conv_2,
   filters = filters,
-  kernel_size = c(num_conv, num_conv),
+  kernel_size = c(3L, 3L),
   strides = c(1L, 1L),
   padding = "same",
   activation = "relu"
@@ -237,7 +228,7 @@ conv_3 <- layer_conv_2d(
 conv_4 <- layer_conv_2d(
   conv_3,
   filters = filters,
-  kernel_size = c(num_conv, num_conv),
+  kernel_size = c(2L, 2L),
   strides = c(1L, 1L),
   padding = "same",
   activation = "relu"
@@ -315,7 +306,7 @@ decoder_reshape <- layer_reshape(target_shape = output_shape[-1])   #output_shap
 decoder_deconv_1 <- layer_conv_2d_transpose(
   filters = filters,
   kernel_size = c(num_conv, num_conv),
-  strides = c(1L, 1L),
+  strides = c(2L, 2L),
   padding = "same",
   activation = "relu"
 )
@@ -323,14 +314,14 @@ decoder_deconv_1 <- layer_conv_2d_transpose(
 decoder_deconv_2 <- layer_conv_2d_transpose(
   filters = filters,
   kernel_size = c(num_conv, num_conv),
-  strides = c(1L, 1L),
+  strides = c(2L, 2L),
   padding = "same",
   activation = "relu"
 )
 
 decoder_deconv_3_upsample <- layer_conv_2d_transpose(
   filters = img_channels,
-  kernel_size = c(3L, 3L),
+  kernel_size = c(2L, 2L),
   strides = c(2L, 2L),
   padding = "same",
   activation = "sigmoid"
@@ -345,16 +336,28 @@ deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
 outputs <- decoder_deconv_3_upsample(deconv_2_decoded)
 
 
+
+#Defining decoder separately
+#hidden_decoded <- decoder_hidden(decoder_input)   # Z with the label
+#up_decoded <- decoder_upsample(hidden_decoded)
+#reshape_decoded <- decoder_reshape(up_decoded)
+#deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
+#deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
+#generator <- decoder_deconv_3_upsample(deconv_2_decoded)
+
+#decoder <- keras_model(decoder_input, generator)
+#summary(decoder)
+
 # Loss function
 ## We want to measure how different our normal distribution with parameters mu and log_var is from...
 ## the standard normal distribution. In this special case, the KL divergence has a closed form. 
+library(magrittr)
 
-
-#vae_loss <- function(x, outputs){
-  #xent_loss <- 1.0 * img_rows * img_cols *loss_binary_crossentropy(x, outputs, axis = -1L)
-  #kl_loss <- -0.5*k_mean(1 + z_log_var - k_square(z_mean) - k_exp(z_log_var), axis = -1L)
-  #xent_loss + kl_loss
-#}
+vae_loss <- function(x, outputs){
+  xent_loss <- 1.0 * img_rows * img_cols *loss_binary_crossentropy(x, outputs, axis = -1L)
+  kl_loss <- -0.5*k_mean(1 + z_log_var - k_square(z_mean) - k_exp(z_log_var), axis = -1L)
+  xent_loss + kl_loss
+}
 
 vae_loss <- function(x, outputs) {
   x <- k_flatten(x)
@@ -366,7 +369,7 @@ vae_loss <- function(x, outputs) {
 
 
 cvae <- keras_model(list(x,label), outputs)
-cvae %>% compile(optimizer = "rmsprop", loss = vae_loss)
+cvae %>% compile(optimizer = "adam", loss = vae_loss)
 
 summary(cvae)
 
@@ -377,12 +380,12 @@ cvae_final <- fit(cvae,
   verbose = 1,
   epochs = epochs, 
   batch_size = batch_size, 
-  validation_data = list(x = x_test, label = y_test), x_test
+  #validation_data = list(x = x_test, label = y_test), x_test
 )
 
 summary(cvae_final)
 plot(cvae_final)
 
-imageShow(x_train[37,,,])
+imageShow(x_train[3,,,])
 
 
