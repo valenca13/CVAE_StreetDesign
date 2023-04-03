@@ -44,7 +44,7 @@ manual filtering process, removing images of low quality. The database
 after filtered can be found [here](%22Database/Images/%22). To avoid
 overfitting, we performed image augmentation.
 
--   object detection/ segmentation:
+-   Object detection/ segmentation:
 
 We perform object detection in this example, to use the vehicles as
 features in the generative deep model. We suggest that future studies
@@ -57,18 +57,63 @@ by specific features (Conditional Variational Autoencoder). However, we
 also tried a simpler version of the model, without the features
 (Variational Autoencoder) to have clearer conclusions of the outputs.
 
-Outline:
+### Outline:
 
-### Guidelines
+#### [1. Dataset](%22Dataset/%22)
+
+1)  The original dataset used for
+    [Training](%22Dataset/Images/Train_filtered/%22) and
+    [Test](%22Dataset/Images/Test_filtered/%22) filtered manually,
+    without augmentation.
+
+2)  Features extracted from object detection in two formats for inputs
+    in the Conditional Variational Autoencoder:
+
+-   Dummy variables indicating if objects were present or not in the
+    image for [Training](%22Dataset/Features/Features_Dummy_Train/%22)
+    and [Test](%22Dataset/Features/Features_Dummy_Test/);
+
+-   Counting the number of each object present in the image for
+    [Training](%22Dataset/Features/Features_Class_Train/%22) and
+    [Test](%22Dataset/Features/Features_Class_Test%22).
+
+> **Note**: In the example of the paper we used only the first option as
+> inputs for the Conditional Variational Autoencoder. However, we make
+> available the code and dataset for both options.
+
+#### [2. Codes](%22Codes/%22)
+
+We share the codes in R used for the preprocessing of the images (image
+augmentation and object detection) and also to perform the variational
+autoenconder (only images as inputs) and the conditional variational
+autoencoder (images and features as inputs).
 
 ##### Preprocessing
 
-[1. Image Augmentation](Image_Augmentation.md)
+1.  [Image augmentation](%22Codes/Image_Augmentation.R%22)
 
-[2. Object Detection](Object_Detection.md)
+2.  [Object detection](%22Codes/Object_Detection.R%22)
 
 ##### Generative Deep Modelling
 
-[3. Variational Autoencoder](VAE.md)
+3.  [Variational Autoencoder](%22Codes/VAE_StreetDesign.R%22)
 
-4.  Conditional Variational Autoencoder
+4.  [Conditional Variational
+    Autoencoder](%22Codes/ConditionalVAE_StreetDesign.R)
+
+#### [3. Guidelines](%22Guidelines/%22)
+
+We reproduce some results in RMarkdown in order for an easier
+understanding of the steps taken in each task.
+
+##### Preprocessing
+
+1.  [Image Augmentation](%22Guidelines/Image_Augmentation.md%22)
+
+2.  [Object Detection](%22Guidelines/Object_Detection.md%22)
+
+##### Generative Deep Modelling
+
+3.  [Variational Autoencoder](%22Guidelines/VAE.md%22)
+
+4.  [Conditional Variational Autoencoder](%22Guidelines/CVAE.md%22)
