@@ -54,50 +54,87 @@ for(i in seq_along(files_train)){
 }
 ```
 
+###### Check the number of dimensions
 
-#Check the number of dimensions
+```{r}
 dim(Results_train[[2]])
-# 240(height-row) x 320(width-column) x 3(channels - RGB) 
+```
 
+###### Show an example of an image from the training dataset
 
-#show images
+```{r}
 imageShow(Results_train[[300]])
+```
 
-# Convert list of images into arrays
-#train_array <- array()
-#for (i in 1:length(Results_train)){
-#train_array[i] <- image_to_array(Results_train[[i]], data_format = "channels_last")
-#}
+###### Convert list of images into arrays
 
+```{r}
 train_array <- array(unlist(Results_train), dim=c(1265,24,32,3))
 dim(train_array)
+```
+
+* **FEATURES** 
+
+###### Convert features into a Dummy (with or without an object). Filter only the feature: with or without pedestrians. 
+
+```{r}
+labels_train$X.person. <- as.integer(labels_train$X.person.)
+y_t <- data.frame(labels_train[-c(1:3)]) %>% 
+  as.matrix()
+y_train <- to_categorical(y_t, num_classes = NULL, dtype="float32") 
+```
+
+**b) Test data**
+
+* **IMAGES**
+
+###### Resize images and assign to a list 
+```{r}
+Results_test <- list()
+for(i in seq_along(files_test)){
+  Image <- readImage(files_test[i])
+  Resized <- resizeImage(Image, width = 240, height = 320)
+  Results_test[[i]] <- Resized
+}
+```
 
 
-dim(train_array)
-print(train_array[1])
+###### Check the number of dimensions
+
+```{r}
+dim(Results_test[[2]])
+```
+
+###### Show an example of an image from the test dataset
+
+```{r}
+imageShow(Results_test[[3]])
+```
+
+###### Convert list of images into arrays
+
+```{r}
+test_array <- array(unlist(Results_test), dim=c(243,24,32,3))
+```
 
 * **FEATURES**
 
-###### Convert labels into a Dummy (with or without the object). Filter only the detection of pedestrians. 
+###### Convert features into a Dummy (with or without an object). Filter only the feature: with or without pedestrians.
 
 ```{r}
-#labels_train$X.person. <- as.integer(labels_train$X.person.)
-
-y_t <- data.frame(labels_train[-c(1:3)]) %>% 
-  as.matrix()
+labels_test$X.person. <- as.integer(labels_test$X.person.)
+y_te <- data.frame(labels_test[-c(1:3)]) %>% 
+  as.matrix() 
+y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") 
 ```
 
->**Note**: fasfasfo+sakfoasfkaspofaskpofaskposakfsap
 
-#Use all the labels in the image. 
+##### VARIATIONAL AUTOENCODER
 
-#labels_train$X.car. <- as.integer(labels_train$X.car.)
-#labels_train$X.bus. <- as.integer(labels_train$X.bus.)
-#labels_train$X.truck. <- as.integer(labels_train$X.truck.)
+## Input image dimensions
 
-###### Convert feature into dummy. 
-```{r}
-y_train <- to_categorical(y_t, num_classes = NULL, dtype="float32")
-```
+img_rows <- 24L
+img_cols <- 32L
+img_channels <- 3L # Greyscale = 1 and RGB = 3
 
-###### 
+

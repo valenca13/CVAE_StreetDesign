@@ -98,8 +98,7 @@ variational autoencoder (images and features as inputs).
 
 3.  [Variational Autoencoder](Codes/VAE_StreetDesign.R)
 
-4.  [Conditional Variational
-    Autoencoder](Codes/ConditionalVAE_StreetDesign.R)
+4.  [Conditional Variational Autoencoder](Codes/CVAE_StreetDesign.R)
 
 #### 3. Guidelines
 

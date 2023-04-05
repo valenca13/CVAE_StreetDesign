@@ -63,7 +63,7 @@ b. [Object detection](Codes/Object_Detection.R)
 
 c. [Variational Autoencoder](Codes/VAE_StreetDesign.R)
 
-d. [Conditional Variational Autoencoder](Codes/ConditionalVAE_StreetDesign.R)
+d. [Conditional Variational Autoencoder](Codes/CVAE_StreetDesign.R)
 
 
 #### 3. Guidelines
