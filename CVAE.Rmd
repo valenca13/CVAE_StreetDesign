@@ -7,7 +7,43 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## GitHub Documents
+##### 1. Import libraries
+
+```{r message=FALSE, warning=FALSE}
+# With TF-2, you can still run this code due to the following line:
+if (tensorflow::tf$executing_eagerly())
+  tensorflow::tf$compat$v1$disable_eager_execution()
+
+library(keras)
+K <- keras::backend()
+
+#library(keras)
+library(tidyverse)
+library(imager)
+library(recolorize)
+library(OpenImageR)
+library(readxl)
+```
+
+##### 2. Import dataset
+
+```{r}
+files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+#files_train_labels <- list.files("Dataset/Features/Features_Class_Train/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
+labels_train <- read_excel('Dataset/Features/Features_Dummy_Train/Labels_Dummy.xlsx')
+
+files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+#files_test_labels <- list.files("Dataset/Features/Features_Class_Test/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
+labels_test <- read_excel('Dataset/Features/Features_Dummy_Test/Labels_Dummy_test.xlsx')
+
+```
+
+##### 3. Preprocessing dataset
+
+```{r}
+
+```
+
 
 This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
 

@@ -32,13 +32,11 @@ for(i in seq_along(files_train)){
   Results_train[[i]] <- Resized
 }
 
-#Taking out images for trying to fit the model.
-#Results_train <- Results_train[-c(11:114)]
 
-# #Convert labels into a "classification". Only images that appear people. 
-#labels_train$X.person. <- as.numeric(labels_train$X.person.)
-labels_train$X.person. <- as.integer(labels_train$X.person.)
-y_train <- data.frame(labels_train[-c(1:3)]) %>% 
+# #Convert labels into a Dummy. Only images that appear people. 
+
+#labels_train$X.person. <- as.integer(labels_train$X.person.)
+y_t <- data.frame(labels_train[-c(1:3)]) %>% 
   as.matrix()
 
 
@@ -49,10 +47,10 @@ y_train <- data.frame(labels_train[-c(1:3)]) %>%
 #labels_train$X.truck. <- as.integer(labels_train$X.truck.)
 
 
-#y_train <- to_categorical(y_t, num_classes = NULL) #%>%
-  #as.integer() %>% 
-  #array() #%>% 
-  #expand_dims(which_dim = 1L)
+y_train <- to_categorical(y_t, num_classes = NULL, dtype="float32") %>%
+  as.integer() %>% 
+  array() %>% 
+  expand_dims(which_dim = 1L)
 
 #y_train <- to_categorical(y_t, num_classes = NULL) #%>%
   #array()
@@ -66,17 +64,15 @@ y_train <- data.frame(labels_train[-c(1:3)]) %>%
 #labels_test$X.car. <- as.integer(labels_test$X.car.)
 #labels_test$X.bus. <- as.integer(labels_test$X.bus.)
 #labels_test$X.truck. <- as.integer(labels_test$X.truck.)
-labels_test$X.person. <- as.integer(labels_test$X.person.)
-y_test <- data.frame(labels_test[-c(1:3)]) %>% 
+#labels_test$X.person. <- as.integer(labels_test$X.person.)
+y_te <- data.frame(labels_test[-c(1:3)]) %>% 
  as.matrix() #%>% 
 
 
-y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") #%>% 
-
-#%>% 
-  #as.integer() %>% 
-  #array() #%>% 
-  #expand_dims(which_dim = 1L)
+y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") %>% 
+  as.integer() %>% 
+  array() %>% 
+  expand_dims(which_dim = 1L)
 
 ##Taking out images for trying to fit the model.
 #y_train <- array(y_train[-c(11:114),])
@@ -359,7 +355,7 @@ vae_loss <- function(x, outputs){
   xent_loss + kl_loss
 }
 
-vae_loss <- function(x, outputs) {
+vae_los <- function(x, outputs) {
   x <- k_flatten(x)
   outputs <- k_flatten(outputs)
   xent_loss <- 1.0 * img_rows * img_cols * loss_binary_crossentropy(x, outputs)
@@ -369,18 +365,18 @@ vae_loss <- function(x, outputs) {
 
 
 cvae <- keras_model(list(x,label), outputs)
-cvae %>% compile(optimizer = "adam", loss = vae_loss)
+cvae %>% compile(optimizer = "adam", loss = vae_los)
 
 summary(cvae)
 
 # Model training ----------------------------------------------------------
 
 cvae_final <- fit(cvae,
-  list(x = x_train, label = y_train), x_train,
+  c(x = x_train, label = y_train),
   verbose = 1,
   epochs = epochs, 
   batch_size = batch_size, 
-  #validation_data = list(x = x_test, label = y_test), x_test
+  validation_data = c(x = x_test, label = y_test)
 )
 
 summary(cvae_final)

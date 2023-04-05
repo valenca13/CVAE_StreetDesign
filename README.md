@@ -26,7 +26,7 @@ solutions.
 These models may have higher importance when explaining and proposing
 innovative solutions to the street that are not straightforward to have
 a mental map by the public, such as allocating road space dynamically
-for different uses, or using technology to manage the space.Generating
+for different uses, or using technology to manage the space. Generating
 various scenarios of a specific street is important because more than
 one solution could be applied to the street. Consequently, public
 managers may choose one solution for reallocating the space permanently,
@@ -37,20 +37,20 @@ different times of the day, week, or season.
 
 The methodology consists of three main tasks:
 
--   Image collection and preprocessing:
+-   **Image collection and preprocessing**:
 
 We extracted street images from the Mapillary database. Then performed a
 manual filtering process, removing images of low quality. The database
 after filtered can be found [here](Database/Images/). To avoid
 overfitting, we performed image augmentation.
 
--   Object detection/ segmentation:
+-   **Object detection/ segmentation**:
 
 We perform object detection in this example, to use the vehicles as
 features in the generative deep model. We suggest that future studies
 use image segmentation.
 
--   Generative deep modelling:
+-   **Generative deep modelling**:
 
 We tested two types of models. The aim is to generate images conditioned
 by specific features (Conditional Variational Autoencoder). However, we
