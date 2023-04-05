@@ -14,17 +14,17 @@ library(recolorize)
 library(OpenImageR)
 library(readxl)
 
+#Import training files
 
 files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)  #Original dataset
 
 #files_train_labels <- list.files("Dataset/Features/Features_Class_Train/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
 labels_train <- read_excel('Dataset/Features/Features_Dummy_Train/Labels_Dummy.xlsx')
 
+#Import test files
 files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE) #Original Dataset
 #files_test_labels <- list.files("Dataset/Features/Features_Class_Test/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
 labels_test <- read_excel('Dataset/Features/Features_Dummy_Test/Labels_Dummy_test.xlsx')
-
-## Note: The labels are already in format of dummy variables (One-hot encoding). No need to use "to_categorical" function. 
 
 # Training data
 Results_train <- list()
@@ -34,6 +34,27 @@ for(i in seq_along(files_train)){
   Results_train[[i]] <- Resized
 }
 
+
+#Check the number of dimensions
+dim(Results_train[[2]])
+# 240(height-row) x 320(width-column) x 3(channels - RGB) 
+
+
+#show images
+imageShow(Results_train[[300]])
+
+# Convert list of images into arrays
+#train_array <- array()
+#for (i in 1:length(Results_train)){
+#train_array[i] <- image_to_array(Results_train[[i]], data_format = "channels_last")
+#}
+
+train_array <- array(unlist(Results_train), dim=c(1265,24,32,3))
+dim(train_array)
+
+
+dim(train_array)
+print(train_array[1])
 
 # #Convert labels into a Dummy. Only images that appear people. 
 
@@ -60,47 +81,6 @@ y_train <- to_categorical(y_t, num_classes = NULL, dtype="float32") #%>%
   #array() #%>% 
 #expand_dims(which_dim = 1L)
 
-
-
-
-#labels_test$X.car. <- as.integer(labels_test$X.car.)
-#labels_test$X.bus. <- as.integer(labels_test$X.bus.)
-#labels_test$X.truck. <- as.integer(labels_test$X.truck.)
-#labels_test$X.person. <- as.integer(labels_test$X.person.)
-y_te <- data.frame(labels_test[-c(1:3)]) %>% 
- as.matrix() #%>% 
-
-
-y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") #%>% 
-  #as.integer() %>% 
-  #array() %>% 
-  #expand_dims(which_dim = 1L)
-
-##Taking out images for trying to fit the model.
-#y_train <- array(y_train[-c(11:114),])
-
-
-#Check the number of dimensions
-dim(Results_train[[2]])
-# 240(height-row) x 320(width-column) x 3(channels - RGB) 
-
-
-#show images
-imageShow(Results_train[[300]])
-
-# Convert list of images into arrays
-#train_array <- array()
-#for (i in 1:length(Results_train)){
-  #train_array[i] <- image_to_array(Results_train[[i]], data_format = "channels_last")
-#}
-
-train_array <- array(unlist(Results_train), dim=c(1265,240,320,3))
-dim(train_array)
-
-
-dim(train_array)
-print(train_array[1])
-
 # Test data
 Results_test <- list()
 for(i in seq_along(files_test)){
@@ -120,14 +100,31 @@ imageShow(Results_test[[3]])
   #test_array <- image_to_array(Results_test[[i]], dim(c(240, 320, 3)))
 #}
 
-test_array <- array(unlist(Results_test), dim=c(243,240,320,3))
+test_array <- array(unlist(Results_test), dim=c(243,24,32,3))
+
+#labels_test$X.car. <- as.integer(labels_test$X.car.)
+#labels_test$X.bus. <- as.integer(labels_test$X.bus.)
+#labels_test$X.truck. <- as.integer(labels_test$X.truck.)
+#labels_test$X.person. <- as.integer(labels_test$X.person.)
+y_te <- data.frame(labels_test[-c(1:3)]) %>% 
+  as.matrix() #%>% 
+
+
+y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") #%>% 
+#as.integer() %>% 
+#array() %>% 
+#expand_dims(which_dim = 1L)
+
+##Taking out images for trying to fit the model.
+#y_train <- array(y_train[-c(11:114),])
+
 
 # VARIATIONAL AUTOENCODER
 
 ## Input image dimensions
 
-img_rows <- 240L
-img_cols <- 320L
+img_rows <- 24L
+img_cols <- 32L
 img_channels <- 3L # Greyscale = 1 and RGB = 3
 
 
@@ -330,7 +327,7 @@ summary(encoder)
 
 #DECODER
 
-output_shape <- c(batch_size, 120L, 160L, filters) # For the encoder to have the same dimensions as the decoder
+output_shape <- c(batch_size, 12L, 16L, filters) # For the encoder to have the same dimensions as the decoder
 
 decoder_input <- layer_input(shape = latent_dim+y_train_shape, name = 'decoder_input')
 # We need to start with a shape that can be remapped to the original image shape.

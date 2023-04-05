@@ -20,7 +20,7 @@ library(readxl)
 library(listarrays)
 ```
 
-##### 2. Import and treat datasets
+##### 2. Import datasets
 
 ``` r
 files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
@@ -28,7 +28,7 @@ files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, p
 files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 ```
 
-##### Resize images and assign to a list.
+##### 3. Resize images and assign to a list.
 
 **a) Training data**
 
@@ -108,7 +108,7 @@ n_images_test <- length(Results_test)
 test_array <- array(unlist(Results_test), dim=c(n_images_test,img_rows, img_cols, img_channels)) 
 ```
 
-##### 3. Data preparation
+##### 4. Data preparation
 
 ``` r
 x_train <- train_array %>% 
@@ -136,7 +136,7 @@ dim(x_test)
 
     ## [1] 243 240 320   3
 
-##### 4. VARIATIONAL AUTOENCODER
+##### 5. VARIATIONAL AUTOENCODER
 
 **a) Training parameters**
 
