@@ -14,11 +14,13 @@ library(recolorize)
 library(OpenImageR)
 library(readxl)
 
-files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+
+files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)  #Original dataset
+
 #files_train_labels <- list.files("Dataset/Features/Features_Class_Train/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
 labels_train <- read_excel('Dataset/Features/Features_Dummy_Train/Labels_Dummy.xlsx')
 
-files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE) #Original Dataset
 #files_test_labels <- list.files("Dataset/Features/Features_Class_Test/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
 labels_test <- read_excel('Dataset/Features/Features_Dummy_Test/Labels_Dummy_test.xlsx')
 
@@ -28,7 +30,7 @@ labels_test <- read_excel('Dataset/Features/Features_Dummy_Test/Labels_Dummy_tes
 Results_train <- list()
 for(i in seq_along(files_train)){
   Image <- readImage(files_train[i]) 
-  Resized <- resizeImage(Image, width = 240, height = 320) #uniform size of images
+  Resized <- resizeImage(Image, width = 24, height = 32) #uniform size of images
   Results_train[[i]] <- Resized
 }
 
@@ -47,10 +49,10 @@ y_t <- data.frame(labels_train[-c(1:3)]) %>%
 #labels_train$X.truck. <- as.integer(labels_train$X.truck.)
 
 
-y_train <- to_categorical(y_t, num_classes = NULL, dtype="float32") %>%
-  as.integer() %>% 
-  array() %>% 
-  expand_dims(which_dim = 1L)
+y_train <- to_categorical(y_t, num_classes = NULL, dtype="float32") #%>%
+  #as.integer() %>% 
+  #array() %>% 
+  #expand_dims(which_dim = 1L)
 
 #y_train <- to_categorical(y_t, num_classes = NULL) #%>%
   #array()
@@ -69,10 +71,10 @@ y_te <- data.frame(labels_test[-c(1:3)]) %>%
  as.matrix() #%>% 
 
 
-y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") %>% 
-  as.integer() %>% 
-  array() %>% 
-  expand_dims(which_dim = 1L)
+y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") #%>% 
+  #as.integer() %>% 
+  #array() %>% 
+  #expand_dims(which_dim = 1L)
 
 ##Taking out images for trying to fit the model.
 #y_train <- array(y_train[-c(11:114),])
@@ -98,6 +100,7 @@ dim(train_array)
 
 dim(train_array)
 print(train_array[1])
+
 # Test data
 Results_test <- list()
 for(i in seq_along(files_test)){
@@ -215,7 +218,7 @@ conv_2 <- layer_conv_2d(
 conv_3 <- layer_conv_2d(
   conv_2,
   filters = filters,
-  kernel_size = c(3L, 3L),
+  kernel_size = c(num_conv, num_conv),
   strides = c(1L, 1L),
   padding = "same",
   activation = "relu"
@@ -224,11 +227,53 @@ conv_3 <- layer_conv_2d(
 conv_4 <- layer_conv_2d(
   conv_3,
   filters = filters,
-  kernel_size = c(2L, 2L),
+  kernel_size = c(num_conv, num_conv),
   strides = c(1L, 1L),
   padding = "same",
   activation = "relu"
 )
+
+
+
+
+
+#x <- layer_input(shape = original_dim, name = 'x')
+
+#conv_1 <- layer_conv_2d(
+ # x,
+  #filters = img_channels,
+  #kernel_size = c(2L, 2L),
+  ##strides = c(1L, 1L),
+  #padding = "same",
+  #activation = "relu"
+#)
+
+#conv_2 <- layer_conv_2d(
+  #conv_1,
+  #filters = filters,
+  #kernel_size = c(2L, 2L),
+  #strides = c(2L, 2L),
+  #padding = "same",
+  #activation = "relu"
+#)
+
+#conv_3 <- layer_conv_2d(
+  #conv_2,
+  #filters = filters,
+  #kernel_size = c(3L, 3L),
+  #strides = c(1L, 1L),
+  #padding = "same",
+  #activation = "relu"
+#)
+
+#conv_4 <- layer_conv_2d(
+  #conv_3,
+  #filters = filters,
+  #kernel_size = c(2L, 2L),
+  #strides = c(1L, 1L),
+  #padding = "same",
+  #activation = "relu"
+#)
 
 
 #flattern the layer to be in same dimension as the label
@@ -236,8 +281,6 @@ flat <- layer_flatten(conv_4, input_shape = x_train_shape)
 
 #Label
 label <- layer_input(shape = y_train_shape, name = 'label') 
-
-
 
 inputs <- layer_concatenate(list(flat,label))
 
@@ -297,12 +340,10 @@ decoder_hidden <- layer_dense(units = intermediate_dim, activation = "relu")
 
 decoder_reshape <- layer_reshape(target_shape = output_shape[-1])   #output_shape[-1]
 
-
-
 decoder_deconv_1 <- layer_conv_2d_transpose(
   filters = filters,
   kernel_size = c(num_conv, num_conv),
-  strides = c(2L, 2L),
+  strides = c(1L, 1L),
   padding = "same",
   activation = "relu"
 )
@@ -310,39 +351,27 @@ decoder_deconv_1 <- layer_conv_2d_transpose(
 decoder_deconv_2 <- layer_conv_2d_transpose(
   filters = filters,
   kernel_size = c(num_conv, num_conv),
-  strides = c(2L, 2L),
+  strides = c(1L, 1L),
   padding = "same",
   activation = "relu"
 )
 
 decoder_deconv_3_upsample <- layer_conv_2d_transpose(
   filters = img_channels,
-  kernel_size = c(2L, 2L),
+  kernel_size = c(3L, 3L),
   strides = c(2L, 2L),
   padding = "same",
-  activation = "sigmoid"
+  activation = "softmax"
 )
 
 
-hidden_decoded <- decoder_hidden(zc)   # Z with the label
+hidden_decoded <- decoder_hidden(z)
 up_decoded <- decoder_upsample(hidden_decoded)
 reshape_decoded <- decoder_reshape(up_decoded)
 deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
 deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
 outputs <- decoder_deconv_3_upsample(deconv_2_decoded)
 
-
-
-#Defining decoder separately
-#hidden_decoded <- decoder_hidden(decoder_input)   # Z with the label
-#up_decoded <- decoder_upsample(hidden_decoded)
-#reshape_decoded <- decoder_reshape(up_decoded)
-#deconv_1_decoded <- decoder_deconv_1(reshape_decoded)
-#deconv_2_decoded <- decoder_deconv_2(deconv_1_decoded)
-#generator <- decoder_deconv_3_upsample(deconv_2_decoded)
-
-#decoder <- keras_model(decoder_input, generator)
-#summary(decoder)
 
 # Loss function
 ## We want to measure how different our normal distribution with parameters mu and log_var is from...
@@ -364,19 +393,19 @@ vae_los <- function(x, outputs) {
 }
 
 
-cvae <- keras_model(list(x,label), outputs)
-cvae %>% compile(optimizer = "adam", loss = vae_los)
+cvae <- keras_model(c(x,label), outputs)
+cvae %>% compile(optimizer = "adam", loss = vae_loss)
 
 summary(cvae)
 
 # Model training ----------------------------------------------------------
 
 cvae_final <- fit(cvae,
-  c(x = x_train, label = y_train),
+  list(x = x_train, label = y_train), x_train,
   verbose = 1,
   epochs = epochs, 
   batch_size = batch_size, 
-  validation_data = c(x = x_test, label = y_test)
+  validation_data = list(x = x_test, label = y_test), x_test
 )
 
 summary(cvae_final)
