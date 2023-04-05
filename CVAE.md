@@ -1,33 +1,152 @@
-Untitled
+Conditional Variational Autoencoder
 ================
 
-## GitHub Documents
-
-This is an R Markdown format used for publishing markdown documents to
-GitHub. When you click the **Knit** button all R code chunks are run and
-a markdown file (.md) suitable for publishing to GitHub is generated.
-
-## Including Code
-
-You can include R code in the document as follows:
+##### 1. Import libraries
 
 ``` r
-summary(cars)
+# With TF-2, you can still run this code due to the following line:
+if (tensorflow::tf$executing_eagerly())
+  tensorflow::tf$compat$v1$disable_eager_execution()
+
+library(keras)
+K <- keras::backend()
+
+#library(keras)
+library(tidyverse)
+library(imager)
+library(recolorize)
+library(OpenImageR)
+library(readxl)
 ```
 
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
+##### 2. Import dataset
 
-## Including Plots
+``` r
+files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+#files_train_labels <- list.files("Dataset/Features/Features_Class_Train/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
+labels_train <- read_excel('Dataset/Features/Features_Dummy_Train/Labels_Dummy.xlsx')
 
-You can also embed plots, for example:
+files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
+#files_test_labels <- list.files("Dataset/Features/Features_Class_Test/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
+labels_test <- read_excel('Dataset/Features/Features_Dummy_Test/Labels_Dummy_test.xlsx')
+```
 
-![](CVAE_files/figure-gfm/pressure-1.png)<!-- -->
+##### 3.Data preprocessing
 
-Note that the `echo = FALSE` parameter was added to the code chunk to
-prevent printing of the R code that generated the plot.
+**a) Training data**
+
+-   **IMAGES**
+
+###### Resize images and assign to a list
+
+``` r
+Results_train <- list()
+for(i in seq_along(files_train)){
+  Image <- readImage(files_train[i]) 
+  Resized <- resizeImage(Image, width = 24, height = 32) #uniform size of images
+  Results_train[[i]] <- Resized
+}
+```
+
+###### Check the number of dimensions
+
+``` r
+dim(Results_train[[2]])
+```
+
+    ## [1] 24 32  3
+
+###### Show an example of an image from the training dataset
+
+``` r
+imageShow(Results_train[[300]])
+```
+
+![](CVAE_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+###### Convert list of images into arrays
+
+``` r
+train_array <- array(unlist(Results_train), dim=c(1265,24,32,3))
+dim(train_array)
+```
+
+    ## [1] 1265   24   32    3
+
+-   **FEATURES**
+
+###### Convert features into a Dummy (with or without an object). Filter only the feature: with or without pedestrians.
+
+``` r
+labels_train$X.person. <- as.integer(labels_train$X.person.)
+y_t <- data.frame(labels_train[-c(1:3)]) %>% 
+  as.matrix()
+y_train <- to_categorical(y_t, num_classes = NULL, dtype="float32") 
+```
+
+**b) Test data**
+
+-   **IMAGES**
+
+###### Resize images and assign to a list
+
+``` r
+Results_test <- list()
+for(i in seq_along(files_test)){
+  Image <- readImage(files_test[i])
+  Resized <- resizeImage(Image, width = 240, height = 320)
+  Results_test[[i]] <- Resized
+}
+```
+
+    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
+    ## becomes 239 therefore we have to adjust it to the input width parameter of
+    ## 240.000000 !
+
+    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
+    ## becomes 239 therefore we have to adjust it to the input width parameter of
+    ## 240.000000 !
+
+    ## Warning in resize_nearest_array(image, width, height): When resizing the 'width'
+    ## becomes 239 therefore we have to adjust it to the input width parameter of
+    ## 240.000000 !
+
+###### Check the number of dimensions
+
+``` r
+dim(Results_test[[2]])
+```
+
+    ## [1] 240 320   3
+
+###### Show an example of an image from the test dataset
+
+``` r
+imageShow(Results_test[[3]])
+```
+
+![](CVAE_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+###### Convert list of images into arrays
+
+``` r
+test_array <- array(unlist(Results_test), dim=c(243,24,32,3))
+```
+
+-   **FEATURES**
+
+###### Convert features into a Dummy (with or without an object). Filter only the feature: with or without pedestrians.
+
+``` r
+labels_test$X.person. <- as.integer(labels_test$X.person.)
+y_te <- data.frame(labels_test[-c(1:3)]) %>% 
+  as.matrix() 
+y_test <- to_categorical(y_te, num_classes = NULL, dtype = "float32") 
+```
+
+##### VARIATIONAL AUTOENCODER
+
+## Input image dimensions
+
+img_rows \<- 24L img_cols \<- 32L img_channels \<- 3L \# Greyscale = 1
+and RGB = 3
