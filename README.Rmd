@@ -11,7 +11,7 @@ This page was created to reproduce some of the results and provide the code in *
 
 >[Authors Anonymous]. The road ahead of using AI for visualizations in street design: Learning from failures. Paper submitted to the International Journal of Information Management. 
 
-* If any of the material is used, please cite the paper above. 
+If any of the material is used, **please cite the paper above**. 
 
 >**Note**: The results from the generative deep modelling were not good due to many reasons explained in the paper. 
 

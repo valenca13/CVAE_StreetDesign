@@ -2,15 +2,18 @@ Generative deep modelling for street design
 ================
 
 This page was created to reproduce some of the results and provide the
-code used in the paper:
+code in ***R* programming** used in the paper:
 
 > \[Authors Anonymous\]. The road ahead of using AI for visualizations
 > in street design: Learning from failures. Paper submitted to the
 > International Journal of Information Management.
 
--   If any of the material is used, please cite the paper above.
+If any of the material is used, **please cite the paper above**.
 
-### Motivation:
+> **Note**: The results from the generative deep modelling were not good
+> due to many reasons explained in the paper.
+
+#### Motivation:
 
 In this paper we propose the use of *generative deep models* for guiding
 public meetings and workshops on street design and street space
@@ -28,9 +31,9 @@ innovative solutions to the street that are not straightforward to have
 a mental map by the public, such as allocating road space dynamically
 for different uses, or using technology to manage the space. Generating
 various scenarios of a specific street is important because more than
-one solution could be applied to the street. Consequently, public
-managers may choose one solution for reallocating the space permanently,
-or more than one solution, that could be used for changing the space in
+one solution can be applied to the street. Consequently, public managers
+may choose one solution for reallocating the space permanently, or more
+than one solution, that could be used for changing the space in
 different times of the day, week, or season.
 
 ### Methodology:
@@ -42,13 +45,13 @@ The methodology consists of three main tasks:
 We extracted street images from the Mapillary database. Then performed a
 manual filtering process, removing images of low quality. The database
 after filtered can be found [here](Database/Images/). To avoid
-overfitting, we performed image augmentation.
+overfitting, we performed image augmentation to the filtered images.
 
 -   **Object detection/ segmentation**:
 
-We perform object detection in this example, to use the vehicles as
-features in the generative deep model. We suggest that future studies
-use image segmentation.
+In this example, we perform object detection to detect vehicles in the
+images, and use them as features in the generative deep model. We
+suggest that future studies use image segmentation.
 
 -   **Generative deep modelling**:
 
@@ -61,13 +64,13 @@ also tried a simpler version of the model, without the features
 
 #### 1. Dataset
 
-1)  The [original dataset](Dataset/Images/) used for
+1)  Download the [original dataset](Dataset/Images/) used for
     [Training](Dataset/Images/Train_filtered/) and
-    [Test](Dataset/Images/Test_filtered/) filtered manually, without
-    augmentation.
+    [Test](Dataset/Images/Test_filtered/) after manually filtered,
+    without augmentation.
 
-2)  Features extracted from object detection in two formats for inputs
-    in the Conditional Variational Autoencoder:
+2)  Download the **features** extracted from object detection in two
+    formats for inputs in the Conditional Variational Autoencoder:
 
 -   Dummy variables indicating if objects were present or not in the
     image for [Training](Dataset/Features/Features_Dummy_Train/) and
@@ -78,41 +81,50 @@ also tried a simpler version of the model, without the features
     [Test](Dataset/Features/Features_Class_Test).
 
 > **Note**: In the example of the paper we used only the first option as
-> inputs for the Conditional Variational Autoencoder. However, we make
-> available the code and dataset for both options.
+> inputs for the Conditional Variational Autoencoder. However, we share
+> the code and dataset of both options.
 
 #### 2. Codes
 
-We share the [codes in R](Codes/) used for the preprocessing of the
+We share the [codes in *R*](Codes/) used for the preprocessing of the
 images (image augmentation and object detection) and also to perform the
-variational autoenconder (only images as inputs) and the conditional
+variational autoencoder (only images as inputs) and the conditional
 variational autoencoder (images and features as inputs).
 
 ##### Preprocessing
 
-1.  [Image augmentation](Codes/Image_Augmentation.R)
+-   [Image augmentation](Codes/Image_Augmentation.R)
 
-2.  [Object detection](Codes/Object_Detection.R)
+-   [Object detection](Codes/Object_Detection.R)
 
 ##### Generative Deep Modelling
 
-3.  [Variational Autoencoder](Codes/VAE_StreetDesign.R)
+-   [Variational Autoencoder](Codes/VAE_StreetDesign.R)
 
-4.  [Conditional Variational Autoencoder](Codes/CVAE_StreetDesign.R)
+-   [Conditional Variational Autoencoder](Codes/CVAE_StreetDesign.R)
 
 #### 3. Guidelines
 
-We reproduce some results in RMarkdown in order for an easier
+We reproduce some of the results in RMarkdown in order for an easier
 understanding of the steps taken in each task.
+
+> **Note**: The image augmentation and object detection produced
+> meaningful and reliable results because we used a pre-trained models.
+> The variational autoencoder and conditional variational autoencoder
+> produced less reliable results.
 
 ##### Preprocessing
 
-1.  [Image Augmentation](Image_Augmentation.md)
+-   [Image Augmentation](Image_Augmentation.md)
 
-2.  [Object Detection](Object_Detection.md)
+-   [Object Detection](Object_Detection.md)
 
 ##### Generative Deep Modelling
 
-3.  [Variational Autoencoder](VAE.md)
+-   [Variational Autoencoder](VAE.md)
 
-4.  [Conditional Variational Autoencoder](CVAE.md)
+-   [Conditional Variational Autoencoder](CVAE.md)
+
+> **Note**: The parameters and architecture of the model are presented
+> in these guidelines only as examples. Please check Table 1 of the
+> paper for more detail of the experiments performed.
