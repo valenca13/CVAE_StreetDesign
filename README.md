@@ -69,8 +69,8 @@ also tried a simpler version of the model, without the features
     [Test](https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Test_Images_filtered.zip)
     after manually filtered, without augmentation.
 
-2)  Download the **features** extracted from object detection in two
-    formats for inputs in the Conditional Variational Autoencoder:
+2)  Download the **features** extracted from object detection for inputs
+    in the Conditional Variational Autoencoder in two formats:
 
 -   Dummy variables indicating if objects were present or not in the
     image for
@@ -79,8 +79,9 @@ also tried a simpler version of the model, without the features
     [Test](https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Features_Dummy_Test.zip);
 
 -   Counting the number of each object present in the image for
-    [Training](Dataset/Features/Features_Class_Train/) and
-    [Test](Dataset/Features/Features_Class_Test).
+    [Training](https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Features_Class_Train.zip)
+    and
+    [Test](https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Features_Class_Test.zip).
 
 > **Note**: In the example of the paper we used only the first option as
 > inputs for the Conditional Variational Autoencoder. However, we share
