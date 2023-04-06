@@ -54,6 +54,8 @@ for(i in seq_along(files_train)){
 }
 ```
 
+>**Note**: The size of the images were substatially reduced for it to able to run and appear in Github. 
+
 ###### Check the number of dimensions
 
 ```{r}
@@ -93,7 +95,7 @@ y_train <- to_categorical(y_t, num_classes = NULL, dtype="float32")
 Results_test <- list()
 for(i in seq_along(files_test)){
   Image <- readImage(files_test[i])
-  Resized <- resizeImage(Image, width = 240, height = 320)
+  Resized <- resizeImage(Image, width = 24, height = 32)
   Results_test[[i]] <- Resized
 }
 ```
