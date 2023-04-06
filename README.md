@@ -13,7 +13,7 @@ If any of the material is used, **please cite the paper above**.
 > **Note**: The results from the generative deep modelling were not good
 > due to many reasons explained in the paper.
 
-#### Motivation:
+### Motivation:
 
 In this paper we propose the use of *generative deep models* for guiding
 public meetings and workshops on street design and street space
@@ -43,8 +43,7 @@ The methodology consists of three main tasks:
 -   **Image collection and preprocessing**:
 
 We extracted street images from the Mapillary database. Then performed a
-manual filtering process, removing images of low quality. The database
-after filtered can be found [here](Dataset/Images/). To avoid
+manual filtering process, removing images of low quality. To avoid
 overfitting, we performed image augmentation to the filtered images.
 
 -   **Object detection/ segmentation**:
