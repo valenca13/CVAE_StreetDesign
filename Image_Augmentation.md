@@ -28,7 +28,7 @@ for(i in seq_along(files_train)){
 imageShow(Results_train[[1]])
 ```
 
-![](Image_Augmentation_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](Fig_Guidelines/Image_Augmentation_unnamed-chunk-3-1.png)<!-- -->
 
 ##### 3. Resize images
 
@@ -42,7 +42,7 @@ for(i in seq_along(files_train)){
 imageShow(Resize_train[[1]])
 ```
 
-![](Image_Augmentation_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](Fig_Guidelines/Image_Augmentation_unnamed-chunk-4-1.png)<!-- -->
 
 ##### 4. Image rotation
 
@@ -76,7 +76,7 @@ for(i in seq_along(files_train)){
 imageShow(Rotation_train[[1]])
 ```
 
-![](Image_Augmentation_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](Fig_Guidelines/Image_Augmentation_unnamed-chunk-5-1.png)<!-- -->
 
 ##### 5. Horizontal flip (Mirror)
 
@@ -110,7 +110,7 @@ for(i in seq_along(files_train)){
 imageShow(flip_train[[1]])
 ```
 
-![](Image_Augmentation_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](Fig_Guidelines/Image_Augmentation_unnamed-chunk-6-1.png)<!-- -->
 
 ##### 6. Width shifted (Shift columns)
 
@@ -144,7 +144,7 @@ for(i in seq_along(files_train)){
 imageShow(w_shift_train[[1]])
 ```
 
-![](Image_Augmentation_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](Fig_Guidelines/Image_Augmentation_unnamed-chunk-7-1.png)<!-- -->
 
 ##### 7. Height shift (Shift rows)
 
@@ -178,7 +178,7 @@ for(i in seq_along(files_train)){
 imageShow(h_shift_train[[1]])
 ```
 
-![](Image_Augmentation_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](Fig_Guidelines/Image_Augmentation_unnamed-chunk-8-1.png)<!-- -->
 
 ##### 8. ZCA Whitening
 
@@ -196,7 +196,7 @@ for(i in seq_along(files_train)){
 imageShow(white_train[[1]])
 ```
 
-![](Image_Augmentation_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](Fig_Guidelines/Image_Augmentation_unnamed-chunk-9-1.png)<!-- -->
 
 ##### 9. Edge Detection
 
@@ -214,4 +214,4 @@ for(i in seq_along(files_train)){
 imageShow(edgedet_train[[1]])
 ```
 
-![](Image_Augmentation_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](Fig_Guidelines/Image_Augmentation_unnamed-chunk-10-1.png)<!-- -->

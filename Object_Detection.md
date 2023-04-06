@@ -93,8 +93,6 @@ test_yolo
 ``` r
 train_img_paths <- list.files("Example_Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
-#train_img_paths <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
-
 train_imgs <- train_img_paths %>%
   map(~ {
     image_load(., target_size = c(416, 416), grayscale = FALSE) %>%
@@ -193,7 +191,7 @@ images_names = gsub(pattern = "\\.jpg$", "", basename(train_img_paths))
 
 > Note: In the paper we tested only the format *“c”*.
 
-###### a) Tranform the labels in Yolo format and save in the Labels folder with the same name as the respective image.
+###### a) Tranform the labels into YOLO format and save in a folder with the same name as the respective image.
 
 ``` r
 Exportlabels_txt = function(){
@@ -277,4 +275,4 @@ plot_boxes(
     ## ℹ The deprecated feature was likely used in the platypus package.
     ##   Please report the issue at <https://github.com/maju116/platypus/issues>.
 
-![](Object_Detection_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->![](Object_Detection_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->![](Object_Detection_files/figure-gfm/unnamed-chunk-14-3.png)<!-- -->
+![](Fig_Guidelines/Object_Detection_unnamed-chunk-14-1.png)<!-- -->![](Fig_Guidelines/Object_Detection_unnamed-chunk-14-2.png)<!-- -->![](Fig_Guidelines/Object_Detection_unnamed-chunk-14-3.png)<!-- -->

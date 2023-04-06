@@ -16,6 +16,25 @@ library(readxl)
 
 #Import training files
 
+# Download the dataset and create data set folder
+
+# Train_filtered_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Train_Images_filtered.zip"
+# Train_filtered = download.file(Train_filtered_files, destfile = "Dataset/files.zip")
+# unzip(zipfile = "Dataset/files.zip", exdir = "Dataset/Images")
+# 
+# Test_filtered_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Test_Images_filtered.zip"
+# Test_filtered = download.file(Test_filtered_files, destfile = "Dataset/files2.zip")
+# unzip(zipfile = "Dataset/files2.zip", exdir = "Dataset/Images")
+# 
+# labels_train_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Features_Dummy_Train.zip"
+# labels_train = download.file(labels_train_files, destfile = "Dataset/files3.zip")
+# unzip(zipfile = "Dataset/files3.zip", exdir = "Dataset/Features")
+# 
+# labels_test_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Features_Dummy_Test.zip"
+# labels_test = download.file(labels_test_files, destfile = "Dataset/files4.zip")
+# unzip(zipfile = "Dataset/files4.zip", exdir = "Dataset/Features")
+
+# List files in folder
 files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)  #Original dataset
 
 #files_train_labels <- list.files("Dataset/Features/Features_Class_Train/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)

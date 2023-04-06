@@ -13,7 +13,17 @@ library(recolorize)
 library(OpenImageR)
 library(readxl)
 
+# Download the dataset and create data set folder
 
+# Train_filtered_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Train_Images_filtered.zip"
+# Train_filtered = download.file(Train_filtered_files, destfile = "Dataset/files.zip")
+# unzip(zipfile = "Dataset/files.zip", exdir = "Dataset/Images")
+# 
+# Test_filtered_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Test_Images_filtered.zip"
+# Test_filtered = download.file(Test_filtered_files, destfile = "Dataset/files2.zip")
+# unzip(zipfile = "Dataset/files2.zip", exdir = "Dataset/Images")
+
+# List files in folder
 files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
 files_test <- list.files("Dataset/Images/Test_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)

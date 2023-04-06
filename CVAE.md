@@ -21,6 +21,28 @@ library(readxl)
 
 ##### 2. Import dataset
 
+###### Download the dataset and create data set folder
+
+``` r
+Train_filtered_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Train_Images_filtered.zip"
+Train_filtered = download.file(Train_filtered_files, destfile = "Dataset/files.zip")
+unzip(zipfile = "Dataset/files.zip", exdir = "Dataset/Images")
+
+Test_filtered_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Test_Images_filtered.zip"
+Test_filtered = download.file(Test_filtered_files, destfile = "Dataset/files2.zip")
+unzip(zipfile = "Dataset/files2.zip", exdir = "Dataset/Images")
+
+labels_train_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Features_Dummy_Train.zip"
+labels_train = download.file(labels_train_files, destfile = "Dataset/files3.zip")
+unzip(zipfile = "Dataset/files3.zip", exdir = "Dataset/Features")
+
+labels_test_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Features_Dummy_Test.zip"
+labels_test = download.file(labels_test_files, destfile = "Dataset/files4.zip")
+unzip(zipfile = "Dataset/files4.zip", exdir = "Dataset/Features")
+```
+
+###### List files in folder
+
 ``` r
 files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 #files_train_labels <- list.files("Dataset/Features/Features_Class_Train/",  full.names = TRUE, pattern = ".txt", all.files = TRUE)
@@ -65,7 +87,7 @@ dim(Results_train[[2]])
 imageShow(Results_train[[300]])
 ```
 
-![](CVAE_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](Fig_Guidelines/CVAE_unnamed-chunk-6-1.png)<!-- -->
 
 ###### Convert list of images into arrays
 
@@ -116,7 +138,7 @@ dim(Results_test[[2]])
 imageShow(Results_test[[3]])
 ```
 
-![](CVAE_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](Fig_Guidelines/CVAE_unnamed-chunk-11-1.png)<!-- -->
 
 ###### Convert list of images into arrays
 
@@ -460,7 +482,7 @@ cvae_final <- fit(cvae,
 imageShow(x_train[3,,,])
 ```
 
-![](CVAE_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](Fig_Guidelines/CVAE_unnamed-chunk-29-1.png)<!-- -->
 
 ###### Generated image from the the test database
 
@@ -468,7 +490,7 @@ imageShow(x_train[3,,,])
 imageShow(x_test[3,,,])
 ```
 
-![](CVAE_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](Fig_Guidelines/CVAE_unnamed-chunk-30-1.png)<!-- -->
 
 > **Note**: In this example we are printing images with id=3 of the
 > training and test datasets.

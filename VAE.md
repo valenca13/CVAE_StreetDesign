@@ -22,6 +22,20 @@ library(listarrays)
 
 ##### 2. Import datasets
 
+###### Download the dataset and create data set folder
+
+``` r
+Train_filtered_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Train_Images_filtered.zip"
+Train_filtered = download.file(Train_filtered_files, destfile = "Dataset/files.zip")
+unzip(zipfile = "Dataset/files.zip", exdir = "Dataset/Images")
+
+Test_filtered_files = "https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Test_Images_filtered.zip"
+Test_filtered = download.file(Test_filtered_files, destfile = "Dataset/files2.zip")
+unzip(zipfile = "Dataset/files2.zip", exdir = "Dataset/Images")
+```
+
+###### List files in folder
+
 ``` r
 files_train <- list.files("Dataset/Images/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
@@ -57,7 +71,7 @@ dim(Results_train[[2]])
 imageShow(Results_train[[35]])
 ```
 
-![](VAE_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](Fig_Guidelines/VAE_unnamed-chunk-6-1.png)<!-- -->
 
 ###### Convert list of images into arrays
 
@@ -99,7 +113,7 @@ dim(Results_test[[2]])
 imageShow(Results_test[[3]])
 ```
 
-![](VAE_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](Fig_Guidelines/VAE_unnamed-chunk-10-1.png)<!-- -->
 
 ###### Convert list of images into arrays
 
@@ -408,7 +422,7 @@ vae %>% fit(
 imageShow(x_train[1,,,])
 ```
 
-![](VAE_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](Fig_Guidelines/VAE_unnamed-chunk-24-1.png)<!-- -->
 
 ###### Generated image from the test database
 
@@ -416,7 +430,7 @@ imageShow(x_train[1,,,])
 imageShow(x_test[1,,,])
 ```
 
-![](VAE_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](Fig_Guidelines/VAE_unnamed-chunk-25-1.png)<!-- -->
 
 > **Note**: In this example we are printing images with id=1 of the
 > training and test datasets.
