@@ -217,7 +217,7 @@ sampling <- function(arg){
 z <- layer_concatenate(list(z_mean, z_log_var)) %>%   
   layer_lambda(sampling)
 
-#Merge latent space with label
+#Merge latent space with features
 
 zc <- layer_concatenate(list(z, label))
 
