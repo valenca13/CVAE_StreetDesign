@@ -71,8 +71,6 @@ test_yolo %>% load_darknet_weights("C:/Users/gabri/Downloads/yolov3.weights")
 ```{r}
 train_img_paths <- list.files("Example_Images",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
 
-#train_img_paths <- list.files("Dataset/Train_filtered",  full.names = TRUE, pattern = ".jpg", all.files = TRUE)
-
 train_imgs <- train_img_paths %>%
   map(~ {
     image_load(., target_size = c(416, 416), grayscale = FALSE) %>%

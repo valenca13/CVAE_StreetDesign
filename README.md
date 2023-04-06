@@ -44,7 +44,7 @@ The methodology consists of three main tasks:
 
 We extracted street images from the Mapillary database. Then performed a
 manual filtering process, removing images of low quality. The database
-after filtered can be found [here](Database/Images/). To avoid
+after filtered can be found [here](Dataset/Images/). To avoid
 overfitting, we performed image augmentation to the filtered images.
 
 -   **Object detection/ segmentation**:
@@ -64,17 +64,20 @@ also tried a simpler version of the model, without the features
 
 #### 1. Dataset
 
-1)  Download the [original dataset](Dataset/Images/) used for
-    [Training](Dataset/Images/Train_filtered/) and
-    [Test](Dataset/Images/Test_filtered/) after manually filtered,
-    without augmentation.
+1)  Download the original dataset used for
+    [Training](https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Train_Images_filtered.zip)
+    and
+    [Test](https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Test_Images_filtered.zip)
+    after manually filtered, without augmentation.
 
 2)  Download the **features** extracted from object detection in two
     formats for inputs in the Conditional Variational Autoencoder:
 
 -   Dummy variables indicating if objects were present or not in the
-    image for [Training](Dataset/Features/Features_Dummy_Train/) and
-    [Test](Dataset/Features/Features_Dummy_Test/);
+    image for
+    [Training](https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Features_Dummy_Train.zip)
+    and
+    [Test](https://github.com/valenca13/CVAE_StreetDesign/releases/download/1.0/Features_Dummy_Test.zip);
 
 -   Counting the number of each object present in the image for
     [Training](Dataset/Features/Features_Class_Train/) and
