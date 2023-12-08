@@ -2,21 +2,14 @@ Generative deep modelling for street design
 ================
 
 This page was created to reproduce some of the results and provide the
-code in ***R* programming** used in the paper:
-
-> \[Authors Anonymous\]. The road ahead of using AI for visualizations
-> in street design: Learning from failures. Paper submitted to the
-> International Journal of Information Management.
-
-If any of the material is used, **please cite the paper above**.
-
-> **Note**: The results from the generative deep modelling were not good
-> due to many reasons explained in the paper.
+code in ***R* programming** used in Chapter 7 of the Ph.D thesis
+“Allocating road space dynamically over time in complex urban areas”
+authored by Gabriel Valença.
 
 ### Motivation:
 
-In this paper we propose the use of *generative deep models* for guiding
-public meetings and workshops on street design and street space
+In this chapter we propose the use of *generative deep models* for
+guiding public meetings and workshops on street design and street space
 allocation projects. As many urban projects are time-consuming and the
 communication of innovative projects may not be clear without
 visualizations, speeding up this process through AI may ease the
