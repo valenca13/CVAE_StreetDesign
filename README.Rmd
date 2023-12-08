@@ -7,17 +7,12 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This page was created to reproduce some of the results and provide the code in **_R_ programming** used in the paper: 
+This page was created to reproduce some of the results and provide the code in **_R_ programming** used in Chapter 7 of the Ph.D thesis "Allocating road space dynamically over time in complex urban areas" authored by Gabriel Valença. 
 
->[Authors Anonymous]. The road ahead of using AI for visualizations in street design: Learning from failures. Paper submitted to the International Journal of Information Management. 
-
-If any of the material is used, **please cite the paper above**. 
-
->**Note**: The results from the generative deep modelling were not good due to many reasons explained in the paper. 
 
 ### Motivation:  
 
-In this paper we propose the use of _generative deep models_ for guiding public meetings and workshops on street design and street space allocation projects. As many urban projects are time-consuming and the communication of innovative projects may not be clear without visualizations, speeding up this process through AI may ease the communication, public participation, and understanding of street space reallocation projects. Using generative deep models to generate various scenarios of street images by modifying characteristics of the images in real-time, can be used as a tool to promote discussions on possible solutions. 
+In this chapter we propose the use of _generative deep models_ for guiding public meetings and workshops on street design and street space allocation projects. As many urban projects are time-consuming and the communication of innovative projects may not be clear without visualizations, speeding up this process through AI may ease the communication, public participation, and understanding of street space reallocation projects. Using generative deep models to generate various scenarios of street images by modifying characteristics of the images in real-time, can be used as a tool to promote discussions on possible solutions. 
 
 These models may have higher importance when explaining and proposing innovative solutions to the street that are not straightforward to have a mental map by the public, such as allocating road space dynamically for different uses, or using technology to manage the space. Generating various scenarios of a specific street is important because more than one solution can be applied to the street. Consequently, public managers may choose one solution for reallocating the space permanently, or more than one solution, that could be used for changing the space in different times of the day, week, or season. 
 
